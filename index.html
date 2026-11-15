@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Box Of Bricks Malaysia — Set Code Lookup</title>
+  <!-- Google Fonts: Fredoka (bubbly headings) & Patrick Hand (cute doodle handwritten copy) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Patrick+Hand&display=swap" rel="stylesheet" />
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            display: ['Fredoka', 'cursive', 'sans-serif'],
+            doodle: ['"Patrick Hand"', 'cursive', 'sans-serif'],
+          },
+          colors: {
+            pastelBg: '#DCE5DD',
+            pastelSurface: '#F3EDE2',
+            pastelInput: '#F7F2E9',
+            pastelSand: '#CFC6B8',
+            pastelRose: '#DE8F86',
+            pastelRoseDark: '#C27269',
+            pastelRoseSoft: '#F3DFDC',
+            pastelButter: '#EDD38E',
+            pastelButterHover: '#E3C578',
+            pastelButterSoft: '#F6EBC9',
+            pastelSage: '#9BB9A5',
+            pastelSageSoft: '#E2ECE4',
+            pastelLavender: '#D4CAE4',
+            pastelLavenderSoft: '#E9E3F1',
+            pastelSky: '#9FC0DF',
+            pastelSkySoft: '#E2EDF6',
+            pastelInk: '#453D38',
+            pastelMuted: '#6D645E',
+          },
+          boxShadow: {
+            doodle: '4px 4px 0px 0px #453D38',
+            doodleSm: '2.5px 2.5px 0px 0px #453D38',
+            doodleSoft: '5px 5px 0px 0px rgba(69, 61, 56, 0.16)',
+            brickRose: '0 4px 0 0 #C27269',
+            brickButter: '0 4px 0 0 #D8BE73',
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    /* Cozy muted pastel sage-mint playground backdrop with soft confetti dots */
+    .playground-pattern {
+      background-color: #DCE5DD;
+      background-image:
+        radial-gradient(#C5D2C7 1.8px, transparent 1.8px),
+        radial-gradient(#E3D4AE 1.6px, transparent 1.6px);
+      background-size: 32px 32px;
+      background-position: 0 0, 16px 16px;
+    }
+
+    /* Hand-drawn wobbly doodle border utility */
+    .doodle-box {
+      border: 2.5px solid #453D38;
+      border-radius: 26px 22px 28px 24px / 24px 28px 22px 26px;
+    }
+
+    .doodle-pill {
+      border: 2px solid #453D38;
+      border-radius: 999px 940px 980px 950px / 950px 980px 940px 999px;
+    }
+
+    /* Gentle floating doodle animation */
+    @keyframes floatSlow {
+      0%, 100% {
+        transform: translateY(0px) rotate(0deg);
+      }
+      50% {
+        transform: translateY(-5px) rotate(3deg);
+      }
+    }
+    .animate-float {
+      animation: floatSlow 4.5s ease-in-out infinite;
+    }
+    .animate-float-delayed {
+      animation: floatSlow 5.2s ease-in-out 1.4s infinite;
+    }
+
+    /* Bouncy pop-in animation for result cards */
+    @keyframes bouncyPop {
+      0% {
+        opacity: 0;
+        transform: translateY(10px) scale(0.97);
+      }
+      70% {
+        opacity: 1;
+        transform: translateY(-2px) scale(1.01);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+    .animate-pop {
+      animation: bouncyPop 0.28s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+
+    /* Custom scrollbar */
+    ::-webkit-scrollbar {
+      width: 7px;
+      height: 7px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #DCE5DD;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #B8C4BA;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #9FAEA2;
+    }
+  </style>
+</head>
+<body class="playground-pattern text-pastelInk font-doodle text-lg min-h-screen flex flex-col antialiased selection:bg-pastelButter selection:text-pastelInk relative overflow-x-hidden">
+
+  <!-- Top Playful Pastel Bunting / Brick Trim -->
+  <div class="w-full h-3 bg-gradient-to-r from-pastelRose via-pastelButter via-pastelSage to-pastelSky border-b-2 border-pastelInk"></div>
+
+  <!-- Decorative Floating Playground Doodles (Non-intrusive, pointer-events-none) -->
+  <div aria-hidden="true" class="pointer-events-none fixed inset-0 overflow-hidden z-0">
+    <!-- Top Left Hand-drawn Pastel Cloud -->
+    <svg class="hidden sm:block absolute top-24 left-6 w-24 h-16 text-pastelSky/60 animate-float" viewBox="0 0 120 75" fill="none">
+      <path d="M26 58H93C104 58 112 50 112 40C112 31 105 24 96 23C93 11 82 4 70 4C59 4 50 10 46 19C43 18 40 17 37 17C25 17 16 26 16 37C10 39 6 44 6 50C6 55 12 58 26 58Z" fill="#EDF5FC" stroke="#4B423D" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+
+    <!-- Top Right Doodle Star & Sparkles -->
+    <svg class="hidden sm:block absolute top-28 right-8 w-16 h-16 text-pastelButter animate-float-delayed" viewBox="0 0 64 64" fill="none">
+      <path d="M32 6L38.5 22.5L56 24L42.5 35.5L46.5 53L32 43.5L17.5 53L21.5 35.5L8 24L25.5 22.5L32 6Z" fill="#F2DC9B" stroke="#4B423D" stroke-width="2.5" stroke-linejoin="round"/>
+      <circle cx="12" cy="12" r="2.5" fill="#E2958C"/>
+      <circle cx="53" cy="48" r="2.5" fill="#A3C1AD"/>
+    </svg>
+
+    <!-- Bottom Left Little Stacked Pastel Building Blocks -->
+    <svg class="hidden md:block absolute bottom-16 left-8 w-24 h-24 animate-float-delayed" viewBox="0 0 100 100" fill="none">
+      <!-- Bottom Sage Block -->
+      <rect x="14" y="56" width="52" height="26" rx="6" fill="#A3C1AD" stroke="#4B423D" stroke-width="2.5"/>
+      <rect x="22" y="50" width="12" height="6" rx="2" fill="#A3C1AD" stroke="#4B423D" stroke-width="2.5"/>
+      <rect x="46" y="50" width="12" height="6" rx="2" fill="#A3C1AD" stroke="#4B423D" stroke-width="2.5"/>
+      <!-- Top Rose Block -->
+      <rect x="30" y="24" width="46" height="26" rx="6" fill="#E2958C" stroke="#4B423D" stroke-width="2.5"/>
+      <rect x="38" y="18" width="11" height="6" rx="2" fill="#E2958C" stroke="#4B423D" stroke-width="2.5"/>
+      <rect x="57" y="18" width="11" height="6" rx="2" fill="#E2958C" stroke="#4B423D" stroke-width="2.5"/>
+    </svg>
+
+    <!-- Bottom Right Doodle Swirl & Heart -->
+    <svg class="hidden md:block absolute bottom-20 right-10 w-20 h-20 animate-float" viewBox="0 0 80 80" fill="none">
+      <path d="M40 62C40 62 16 47 16 30C16 22 22 16 29 16C34 16 38 19 40 23C42 19 46 16 51 16C58 16 64 22 64 30C64 47 40 62 40 62Z" fill="#F9ECEA" stroke="#4B423D" stroke-width="2.5" stroke-linejoin="round"/>
+      <path d="M26 28C27 25 30 23 33 23" stroke="#4B423D" stroke-width="2" stroke-linecap="round"/>
+    </svg>
+  </div>
+
+  <!-- Minimalist Playful Header -->
+  <header class="w-full bg-pastelSurface/95 backdrop-blur-sm border-b-2 border-pastelInk sticky top-0 z-30">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 h-18 sm:h-20 py-3 flex items-center justify-between gap-3">
+      <!-- Brand Identity with Cute Smiley Brick Mascot -->
+      <button id="brandResetBtn" type="button" class="flex items-center gap-3 text-left group focus:outline-none">
+        <div class="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-pastelRose border-2 border-pastelInk shadow-doodleSm flex items-center justify-center group-hover:-rotate-3 group-active:translate-y-0.5 transition-transform shrink-0">
+          <!-- Cute Hand-Drawn Smiley Brick SVG -->
+          <svg class="w-8 h-8" viewBox="0 0 36 36" fill="none" aria-hidden="true">
+            <rect x="9" y="5" width="6" height="4" rx="1.5" fill="#F2DC9B" stroke="#4B423D" stroke-width="2"/>
+            <rect x="21" y="5" width="6" height="4" rx="1.5" fill="#F2DC9B" stroke="#4B423D" stroke-width="2"/>
+            <rect x="5" y="9" width="26" height="21" rx="5" fill="#FCF5DF" stroke="#4B423D" stroke-width="2"/>
+            <!-- Cute Eyes & Smile -->
+            <circle cx="13.5" cy="18" r="1.6" fill="#4B423D"/>
+            <circle cx="22.5" cy="18" r="1.6" fill="#4B423D"/>
+            <path d="M14.5 22.5C15.8 24.5 20.2 24.5 21.5 22.5" stroke="#4B423D" stroke-width="2" stroke-linecap="round"/>
+            <!-- Rosy Cheeks -->
+            <circle cx="10.5" cy="20.5" r="1.6" fill="#E2958C" opacity="0.7"/>
+            <circle cx="25.5" cy="20.5" r="1.6" fill="#E2958C" opacity="0.7"/>
+          </svg>
+        </div>
+        <div>
+          <span class="font-display font-bold text-lg sm:text-xl tracking-tight text-pastelInk leading-none block">
+            Box Of Bricks <span class="text-pastelRoseDark">Malaysia</span>
+          </span>
+          <span class="text-sm sm:text-base text-pastelMuted leading-none block mt-0.5">
+            Set Code Playground Finder ✦
+          </span>
+        </div>
+      </button>
+
+      <!-- Cute Sticker Button to Add Set Code -->
+      <button
+        id="openModalBtn"
+        type="button"
+        class="inline-flex items-center gap-1.5 px-4 py-2 rounded-2xl font-display text-sm sm:text-base font-semibold text-pastelInk bg-pastelButter hover:bg-pastelButterHover border-2 border-pastelInk shadow-doodleSm hover:-translate-y-0.5 active:translate-y-0.5 transition-all shrink-0"
+      >
+        <svg class="w-4 h-4 text-pastelInk" fill="none" stroke="currentColor" stroke-width="2.8" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+        </svg>
+        <span>Add Set Code</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Content Area -->
+  <main class="relative z-10 flex-1 w-full max-w-3xl mx-auto px-4 sm:px-6 pt-9 sm:pt-14 pb-16 flex flex-col items-center">
+    
+    <!-- Front Page Hero & Search Focus -->
+    <section class="w-full text-center mb-7 sm:mb-9">
+      <div class="inline-flex items-center gap-2 px-4 py-1 doodle-pill bg-pastelSageSoft text-pastelInk font-display text-xs sm:text-sm font-semibold tracking-wide mb-4 shadow-doodleSm">
+        <span class="w-2.5 h-2.5 rounded-full bg-pastelRose border border-pastelInk"></span>
+        LEGO® Certified Store MY Quick Finder
+      </div>
+
+      <div class="relative inline-block">
+        <h1 class="font-display text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight text-pastelInk">
+          Find Box Code
+        </h1>
+        <!-- Hand-drawn Squiggly Doodle Underline -->
+        <svg class="w-48 sm:w-64 h-4 mx-auto -mt-1 text-pastelRose" viewBox="0 0 220 16" fill="none" aria-hidden="true">
+          <path d="M4 10C24 3 44 15 64 8C84 1 104 15 124 8C144 1 164 15 184 8C198 3 208 9 216 7" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
+        </svg>
+      </div>
+
+      <p class="mt-2.5 text-lg sm:text-xl text-pastelMuted max-w-md mx-auto leading-snug">
+        Pop a LEGO® set number into the box below to peek at its name, MYR price, release month & pieces!
+      </p>
+    </section>
+
+    <!-- Prominent Chunky Doodle Search Bar -->
+    <section class="w-full max-w-2xl mb-6">
+      <form id="searchForm" class="relative flex items-center" novalidate>
+        <!-- Left Hand-drawn Magnifier Icon -->
+        <div class="pointer-events-none absolute inset-y-0 left-0 pl-4 sm:pl-5 flex items-center text-pastelInk/75">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35m1.85-5.15a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
+        </div>
+
+        <input
+          id="codeInput"
+          type="text"
+          inputmode="numeric"
+          autocomplete="off"
+          spellcheck="false"
+          placeholder="Type a set code (e.g. 11388, 21065, 11390, 76352)..."
+          aria-label="Find Box Code"
+          class="w-full bg-pastelSurface text-pastelInk placeholder-pastelMuted/75 font-doodle text-xl sm:text-2xl pl-12 sm:pl-14 pr-28 sm:pr-32 py-3.5 sm:py-4 doodle-box shadow-doodle focus:bg-pastelInput focus:ring-4 focus:ring-pastelButter/60 focus:outline-none transition-all"
+        />
+
+        <!-- Clear Button -->
+        <button
+          id="clearBtn"
+          type="button"
+          aria-label="Clear search"
+          class="hidden absolute right-20 sm:right-24 p-2 text-pastelMuted hover:text-pastelInk rounded-full transition-colors"
+        >
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.6" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+
+        <!-- Submit Search Button -->
+        <button
+          type="submit"
+          aria-label="Search set code"
+          class="absolute right-2.5 sm:right-3 px-4 sm:px-5 py-2 sm:py-2.5 rounded-2xl bg-pastelRose hover:bg-pastelRoseDark text-white font-display font-semibold text-base sm:text-lg border-2 border-pastelInk shadow-doodleSm active:translate-y-0.5 transition-all"
+        >
+          Find!
+        </button>
+      </form>
+
+      <!-- Quick Sample Set Code Sticker Pills -->
+      <div class="mt-5 flex flex-wrap items-center justify-center gap-2.5">
+        <span class="text-base sm:text-lg text-pastelMuted mr-1">Try a sticker code:</span>
+        <button type="button" data-code="11388" class="sample-pill px-3.5 py-1 doodle-pill font-display text-sm font-semibold bg-pastelButterSoft hover:bg-pastelButter text-pastelInk shadow-doodleSm hover:-translate-y-0.5 active:translate-y-0 transition-all">
+          11388
+        </button>
+        <button type="button" data-code="21065" class="sample-pill px-3.5 py-1 doodle-pill font-display text-sm font-semibold bg-pastelSkySoft hover:bg-pastelSky/60 text-pastelInk shadow-doodleSm hover:-translate-y-0.5 active:translate-y-0 transition-all">
+          21065
+        </button>
+        <button type="button" data-code="11390" class="sample-pill px-3.5 py-1 doodle-pill font-display text-sm font-semibold bg-pastelRoseSoft hover:bg-pastelRose/50 text-pastelInk shadow-doodleSm hover:-translate-y-0.5 active:translate-y-0 transition-all">
+          11390
+        </button>
+        <button type="button" data-code="76352" class="sample-pill px-3.5 py-1 doodle-pill font-display text-sm font-semibold bg-pastelSageSoft hover:bg-pastelSage/60 text-pastelInk shadow-doodleSm hover:-translate-y-0.5 active:translate-y-0 transition-all">
+          76352
+        </button>
+        <button type="button" data-code="10371" class="sample-pill px-3.5 py-1 doodle-pill font-display text-sm font-semibold bg-pastelLavenderSoft hover:bg-pastelLavender text-pastelInk shadow-doodleSm hover:-translate-y-0.5 active:translate-y-0 transition-all">
+          10371
+        </button>
+        <button type="button" data-code="763" class="sample-pill px-3.5 py-1 rounded-full border-2 border-dashed border-pastelInk/70 font-display text-sm font-semibold bg-pastelSurface hover:bg-pastelButterSoft text-pastelMuted hover:text-pastelInk hover:-translate-y-0.5 transition-all" title="Test partial code search">
+          763*
+        </button>
+      </div>
+    </section>
+
+    <!-- Dynamic Results Container -->
+    <section id="resultsArea" class="w-full max-w-2xl mt-3" aria-live="polite">
+      <!-- Populated dynamically via JavaScript -->
+    </section>
+
+  </main>
+
+  <!-- Minimalist Playful Footer -->
+  <footer class="relative z-10 w-full border-t-2 border-pastelInk bg-pastelSurface/90 py-4 px-4 text-center">
+    <p class="text-base sm:text-lg text-pastelMuted">
+      Box Of Bricks Malaysia — Set Code Lookup • Prices in Malaysian Ringgit (MYR)
+    </p>
+  </footer>
+
+  <!-- Modal: Add Custom Set Code -->
+  <div
+    id="addModal"
+    class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-pastelInk/40 backdrop-blur-xs"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="modalTitle"
+  >
+    <div class="bg-pastelSurface w-full max-w-md doodle-box shadow-doodle overflow-hidden animate-pop relative">
+      <!-- Cute Pastel Washi Tape Strip on Top -->
+      <div class="h-3 w-full bg-gradient-to-r from-pastelButter via-pastelSage to-pastelRose border-b-2 border-pastelInk"></div>
+
+      <div class="p-6 sm:p-7">
+        <div class="flex items-center justify-between mb-4">
+          <div>
+            <h2 id="modalTitle" class="font-display text-2xl font-bold text-pastelInk">Add New Set Code ✎</h2>
+            <p class="text-base text-pastelMuted">Save a new LEGO® box code to your doodle catalog!</p>
+          </div>
+          <button
+            id="closeModalBtn"
+            type="button"
+            aria-label="Close modal"
+            class="p-2 rounded-full border-2 border-transparent hover:border-pastelInk text-pastelMuted hover:text-pastelInk hover:bg-pastelButterSoft transition-all"
+          >
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+
+        <!-- Inline Feedback Message Box (No alert()) -->
+        <div id="modalFeedback" class="hidden mb-4 px-4 py-2.5 rounded-2xl text-base"></div>
+
+        <form id="addSetForm" class="space-y-4">
+          <div>
+            <label for="newCode" class="block font-display text-sm font-semibold text-pastelInk mb-1">
+              Set Code <span class="text-pastelRoseDark">*</span>
+            </label>
+            <input
+              id="newCode"
+              type="text"
+              required
+              placeholder="e.g., 75397"
+              class="w-full px-4 py-2 rounded-2xl bg-pastelInput border-2 border-pastelInk text-pastelInk focus:bg-pastelButterSoft/60 focus:outline-none text-lg"
+            />
+          </div>
+
+          <div>
+            <label for="newName" class="block font-display text-sm font-semibold text-pastelInk mb-1">
+              Set Name <span class="text-pastelRoseDark">*</span>
+            </label>
+            <input
+              id="newName"
+              type="text"
+              required
+              placeholder="e.g., Jabba's Sail Barge"
+              class="w-full px-4 py-2 rounded-2xl bg-pastelInput border-2 border-pastelInk text-pastelInk focus:bg-pastelButterSoft/60 focus:outline-none text-lg"
+            />
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div>
+              <label for="newPrice" class="block font-display text-sm font-semibold text-pastelInk mb-1">
+                Price (RM) <span class="text-pastelRoseDark">*</span>
+              </label>
+              <input
+                id="newPrice"
+                type="number"
+                step="0.01"
+                min="0"
+                required
+                placeholder="2299.00"
+                class="w-full px-3.5 py-2 rounded-2xl bg-pastelInput border-2 border-pastelInk text-pastelInk focus:bg-pastelButterSoft/60 focus:outline-none text-lg"
+              />
+            </div>
+
+            <div>
+              <label for="newRelease" class="block font-display text-sm font-semibold text-pastelInk mb-1">
+                Release Month <span class="text-pastelRoseDark">*</span>
+              </label>
+              <input
+                id="newRelease"
+                type="text"
+                required
+                placeholder="Oct-26"
+                class="w-full px-3.5 py-2 rounded-2xl bg-pastelInput border-2 border-pastelInk text-pastelInk focus:bg-pastelButterSoft/60 focus:outline-none text-lg"
+              />
+            </div>
+
+            <div>
+              <label for="newPieces" class="block font-display text-sm font-semibold text-pastelInk mb-1">
+                Pieces <span class="text-pastelRoseDark">*</span>
+              </label>
+              <input
+                id="newPieces"
+                type="number"
+                min="1"
+                required
+                placeholder="3942"
+                class="w-full px-3.5 py-2 rounded-2xl bg-pastelInput border-2 border-pastelInk text-pastelInk focus:bg-pastelButterSoft/60 focus:outline-none text-lg"
+              />
+            </div>
+          </div>
+
+          <div class="pt-2 flex items-center justify-end gap-3">
+            <button
+              id="cancelModalBtn"
+              type="button"
+              class="px-4 py-2 rounded-2xl font-display text-sm font-semibold text-pastelMuted hover:text-pastelInk hover:bg-pastelBg border-2 border-transparent hover:border-pastelInk/30 transition-all"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              class="px-5 py-2 rounded-2xl bg-pastelRose hover:bg-pastelRoseDark text-white font-display text-base font-semibold border-2 border-pastelInk shadow-doodleSm active:translate-y-0.5 transition-all"
+            >
+              Save Sticker!
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /**
+     * Built-in Box of Bricks Malaysia Set Catalog
+     * Each entry contains strictly: code, name, price (MYR), releaseMonth, and pieces.
+     */
+    const DEFAULT_SETS = [
+      { code: "11388", name: "Venetian Neighborhood", price: 2099.00, releaseMonth: "Nov-26", pieces: 5682 },
+      { code: "21065", name: "Sagrada Família", price: 3199.00, releaseMonth: "Nov-26", pieces: 12060 },
+      { code: "11390", name: "Dragon Ball: Shenron & Goku", price: 599.00, releaseMonth: "Nov-26", pieces: 1764 },
+      { code: "10371", name: "Cozy Plants", price: 89.00, releaseMonth: "Nov-26", pieces: 294 },
+      { code: "76352", name: "Avengers: Doomsday New Avengers Tower", price: 479.00, releaseMonth: "Oct-26", pieces: 1038 },
+      { code: "76346", name: "Spider-Man Hero Figure", price: 449.00, releaseMonth: "Jun-26", pieces: 876 },
+      { code: "76345", name: "Doctor Doom Bust", price: 219.00, releaseMonth: "Sep-26", pieces: 512 },
+      { code: "76294", name: "X-Men: The X-Mansion", price: 1499.00, releaseMonth: "Nov-24", pieces: 3093 },
+      { code: "76343", name: "Epic Battle: Hulkbuster vs. The Hulk", price: 219.00, releaseMonth: "Jan-26", pieces: 413 },
+      { code: "10316", name: "THE LORD OF THE RINGS: RIVERDELL", price: 2199.00, releaseMonth: "Mar-23", pieces: 6167 },
+      { code: "42172", name: "McLaren P1™", price: 1999.00, releaseMonth: "Aug-24", pieces: 3893 },
+      { code: "21348", name: "Dungeons & Dragons: Red Dragon's Tale", price: 1599.00, releaseMonth: "Apr-24", pieces: 3745 }
+    ];
+
+    const STORAGE_KEY = "bob_my_custom_sets_v1";
+
+    // Load catalog combining default sets + any locally saved custom sets
+    function loadCatalog() {
+      const map = new Map();
+      DEFAULT_SETS.forEach(item => map.set(item.code.trim(), item));
+      try {
+        const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+        if (Array.isArray(saved)) {
+          saved.forEach(item => {
+            if (item && item.code) {
+              map.set(String(item.code).trim(), item);
+            }
+          });
+        }
+      } catch (err) {
+        console.error("Failed to parse custom sets from localStorage:", err);
+      }
+      return Array.from(map.values());
+    }
+
+    function saveCustomSet(newSet) {
+      try {
+        const existing = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+        const filtered = Array.isArray(existing)
+          ? existing.filter(s => String(s.code).trim() !== newSet.code)
+          : [];
+        filtered.push(newSet);
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(filtered));
+      } catch (err) {
+        console.error("Failed to save custom set:", err);
+      }
+    }
+
+    let setCatalog = loadCatalog();
+
+    // Formatting Helpers
+    function formatPriceRM(value) {
+      const num = Number(value);
+      if (Number.isNaN(num)) return "RM0.00";
+      return "RM" + num.toLocaleString("en-MY", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      });
+    }
+
+    function formatPieces(count) {
+      const num = Number(count);
+      if (Number.isNaN(num)) return "0 pieces";
+      return num.toLocaleString("en-US") + (num === 1 ? " piece" : " pieces");
+    }
+
+    function escapeHTML(str) {
+      return String(str)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+    }
+
+    // DOM Elements
+    const codeInput = document.getElementById("codeInput");
+    const searchForm = document.getElementById("searchForm");
+    const clearBtn = document.getElementById("clearBtn");
+    const resultsArea = document.getElementById("resultsArea");
+    const brandResetBtn = document.getElementById("brandResetBtn");
+    const samplePills = document.querySelectorAll(".sample-pill");
+
+    // Modal DOM Elements
+    const addModal = document.getElementById("addModal");
+    const openModalBtn = document.getElementById("openModalBtn");
+    const closeModalBtn = document.getElementById("closeModalBtn");
+    const cancelModalBtn = document.getElementById("cancelModalBtn");
+    const addSetForm = document.getElementById("addSetForm");
+    const modalFeedback = document.getElementById("modalFeedback");
+
+    /**
+     * Renders a single cute doodle result card strictly showing ONLY the 4 requested fields:
+     * 1. Name
+     * 2. Price
+     * 3. Release Month
+     * 4. Pieces Amount
+     */
+    function createStrictResultCardHTML(setItem) {
+      return `
+        <div class="relative pt-3">
+          <!-- Cute Pastel Washi Tape Sticker on Top Center -->
+          <div aria-hidden="true" class="mx-auto w-28 h-6 bg-pastelButter/90 border-2 border-pastelInk rounded-sm -rotate-2 relative z-10 -mb-3 shadow-xs"></div>
+
+          <article class="animate-pop bg-pastelSurface doodle-box shadow-doodle overflow-hidden">
+            <!-- Top Pastel Rainbow Ribbon -->
+            <div class="h-2.5 w-full bg-gradient-to-r from-pastelRose via-pastelButter via-pastelSage to-pastelSky border-b-2 border-pastelInk"></div>
+
+            <div class="p-6 sm:p-8">
+              <!-- Field 1: Name -->
+              <div class="pb-5 border-b-2 border-dashed border-pastelSand">
+                <span class="inline-flex items-center gap-1.5 font-display text-xs sm:text-sm font-semibold uppercase tracking-wider text-pastelMuted mb-1">
+                  ✦ Name
+                </span>
+                <h2 class="font-display text-2xl sm:text-3xl font-bold text-pastelInk leading-snug">
+                  ${escapeHTML(setItem.name)}
+                </h2>
+              </div>
+
+              <!-- Fields 2, 3, 4: Price, Release Month, Pieces Amount -->
+              <div class="pt-6 grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-5">
+                <!-- Field 2: Price (Cute Pastel Rose Sticker Tile) -->
+                <div class="bg-pastelRoseSoft border-2 border-pastelInk rounded-2xl p-4 shadow-doodleSm -rotate-1 hover:rotate-0 transition-transform">
+                  <span class="block font-display text-xs sm:text-sm font-semibold uppercase tracking-wide text-pastelRoseDark mb-1">
+                    Price
+                  </span>
+                  <p class="font-display text-xl sm:text-2xl font-bold text-pastelInk tracking-tight">
+                    ${formatPriceRM(setItem.price)}
+                  </p>
+                </div>
+
+                <!-- Field 3: Release Month (Cute Pastel Lavender Sticker Tile) -->
+                <div class="bg-pastelLavenderSoft border-2 border-pastelInk rounded-2xl p-4 shadow-doodleSm rotate-1 hover:rotate-0 transition-transform">
+                  <span class="block font-display text-xs sm:text-sm font-semibold uppercase tracking-wide text-[#6E6288] mb-1">
+                    Release Month
+                  </span>
+                  <p class="font-display text-xl sm:text-2xl font-bold text-pastelInk">
+                    ${escapeHTML(setItem.releaseMonth)}
+                  </p>
+                </div>
+
+                <!-- Field 4: Pieces Amount (Cute Pastel Sage Sticker Tile) -->
+                <div class="bg-pastelSageSoft border-2 border-pastelInk rounded-2xl p-4 shadow-doodleSm -rotate-1 hover:rotate-0 transition-transform">
+                  <span class="block font-display text-xs sm:text-sm font-semibold uppercase tracking-wide text-[#52735D] mb-1">
+                    Pieces Amount
+                  </span>
+                  <p class="font-display text-xl sm:text-2xl font-bold text-pastelInk">
+                    ${formatPieces(setItem.pieces)}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </article>
+        </div>
+      `;
+    }
+
+    /**
+     * Handles instant lookup on input or submit
+     */
+    function handleLookup(rawQuery) {
+      const query = rawQuery.trim().replace(/^#/, "");
+
+      // Toggle clear button visibility
+      if (rawQuery.length > 0) {
+        clearBtn.classList.remove("hidden");
+      } else {
+        clearBtn.classList.add("hidden");
+      }
+
+      // Empty state: keep front page clean and uncluttered
+      if (!query) {
+        resultsArea.innerHTML = "";
+        return;
+      }
+
+      // 1. Check for exact set code match first
+      const exactMatch = setCatalog.find(
+        item => item.code.toLowerCase() === query.toLowerCase()
+      );
+
+      if (exactMatch) {
+        resultsArea.innerHTML = createStrictResultCardHTML(exactMatch);
+        return;
+      }
+
+      // 2. Check for partial set code matches (e.g., typing "763")
+      const partialMatches = setCatalog.filter(item =>
+        item.code.toLowerCase().startsWith(query.toLowerCase()) ||
+        item.code.toLowerCase().includes(query.toLowerCase())
+      );
+
+      if (partialMatches.length === 1) {
+        // Single partial match: show the clean strict result card directly
+        resultsArea.innerHTML = createStrictResultCardHTML(partialMatches[0]);
+        return;
+      }
+
+      if (partialMatches.length > 1) {
+        // Multiple partial matches: allow user to pick the exact code cleanly
+        const buttonsHTML = partialMatches
+          .map(
+            item => `
+              <button
+                type="button"
+                data-select-code="${escapeHTML(item.code)}"
+                class="partial-match-btn group flex items-center justify-between w-full text-left px-4 py-3 rounded-2xl bg-pastelBg hover:bg-pastelButterSoft border-2 border-pastelInk/80 hover:border-pastelInk shadow-doodleSm hover:-translate-y-0.5 transition-all"
+              >
+                <div class="flex items-center gap-3 min-w-0">
+                  <span class="px-3 py-0.5 doodle-pill bg-pastelRose text-white font-display font-semibold text-sm tracking-wide shrink-0">
+                    ${escapeHTML(item.code)}
+                  </span>
+                  <span class="font-display font-semibold text-base sm:text-lg text-pastelInk truncate">
+                    ${escapeHTML(item.name)}
+                  </span>
+                </div>
+                <span class="font-display text-sm font-semibold text-pastelMuted group-hover:text-pastelInk ml-3 shrink-0">
+                  Peek &rarr;
+                </span>
+              </button>
+            `
+          )
+          .join("");
+
+        resultsArea.innerHTML = `
+          <div class="animate-pop bg-pastelSurface doodle-box shadow-doodle p-5 sm:p-6">
+            <p class="font-display text-sm sm:text-base font-semibold text-pastelMuted mb-3">
+              ✦ ${partialMatches.length} matching box stickers found — tap one to open:
+            </p>
+            <div class="space-y-3">
+              ${buttonsHTML}
+            </div>
+          </div>
+        `;
+
+        // Attach click listeners to partial match selectors
+        resultsArea.querySelectorAll(".partial-match-btn").forEach(btn => {
+          btn.addEventListener("click", () => {
+            const chosenCode = btn.getAttribute("data-select-code");
+            codeInput.value = chosenCode;
+            handleLookup(chosenCode);
+          });
+        });
+        return;
+      }
+
+      // 3. Cute "Set code not found" empty state
+      resultsArea.innerHTML = `
+        <div class="animate-pop bg-pastelSurface doodle-box shadow-doodle p-8 text-center">
+          <!-- Cute Puzzled Brick Doodle SVG -->
+          <div class="w-16 h-16 rounded-2xl bg-pastelRoseSoft border-2 border-pastelInk shadow-doodleSm flex items-center justify-center mx-auto mb-3 -rotate-3">
+            <svg class="w-10 h-10" viewBox="0 0 40 40" fill="none">
+              <circle cx="14" cy="17" r="2" fill="#4B423D"/>
+              <circle cx="26" cy="17" r="2" fill="#4B423D"/>
+              <path d="M15 26C17 24 23 24 25 26" stroke="#4B423D" stroke-width="2.3" stroke-linecap="round"/>
+              <path d="M29 9C31 7 34 8 34 11C34 13 31 14 31 16" stroke="#CA7A71" stroke-width="2.2" stroke-linecap="round"/>
+              <circle cx="31" cy="19.5" r="1.2" fill="#CA7A71"/>
+            </svg>
+          </div>
+          <h3 class="font-display text-2xl font-bold text-pastelInk">Oops! Set code not found</h3>
+          <p class="text-lg text-pastelMuted mt-1">
+            We couldn't find box code <span class="font-display font-semibold text-pastelInk">"${escapeHTML(query)}"</span> in our toybox yet.
+          </p>
+          <button
+            type="button"
+            id="notFoundAddBtn"
+            class="mt-4 inline-flex items-center gap-1.5 px-5 py-2 doodle-pill bg-pastelButter hover:bg-pastelButterHover text-pastelInk font-display text-sm sm:text-base font-semibold shadow-doodleSm hover:-translate-y-0.5 active:translate-y-0 transition-all"
+          >
+            + Add "${escapeHTML(query)}" Sticker
+          </button>
+        </div>
+      `;
+
+      const notFoundAddBtn = document.getElementById("notFoundAddBtn");
+      if (notFoundAddBtn) {
+        notFoundAddBtn.addEventListener("click", () => {
+          openAddModal(query);
+        });
+      }
+    }
+
+    // Search Input & Form Listeners
+    codeInput.addEventListener("input", e => {
+      handleLookup(e.target.value);
+    });
+
+    searchForm.addEventListener("submit", e => {
+      e.preventDefault();
+      handleLookup(codeInput.value);
+    });
+
+    clearBtn.addEventListener("click", () => {
+      codeInput.value = "";
+      handleLookup("");
+      codeInput.focus();
+    });
+
+    brandResetBtn.addEventListener("click", () => {
+      codeInput.value = "";
+      handleLookup("");
+      codeInput.focus();
+    });
+
+    // Sample Set Code Pills
+    samplePills.forEach(pill => {
+      pill.addEventListener("click", () => {
+        const code = pill.getAttribute("data-code");
+        codeInput.value = code;
+        handleLookup(code);
+        codeInput.focus();
+      });
+    });
+
+    // Modal Open/Close & Form Logic
+    function openAddModal(prefillCode = "") {
+      modalFeedback.classList.add("hidden");
+      addSetForm.reset();
+      if (prefillCode) {
+        document.getElementById("newCode").value = prefillCode;
+      }
+      addModal.classList.remove("hidden");
+      addModal.classList.add("flex");
+      setTimeout(() => {
+        if (prefillCode) {
+          document.getElementById("newName").focus();
+        } else {
+          document.getElementById("newCode").focus();
+        }
+      }, 50);
+    }
+
+    function closeAddModal() {
+      addModal.classList.add("hidden");
+      addModal.classList.remove("flex");
+    }
+
+    openModalBtn.addEventListener("click", () => openAddModal(codeInput.value.trim()));
+    closeModalBtn.addEventListener("click", closeAddModal);
+    cancelModalBtn.addEventListener("click", closeAddModal);
+
+    addModal.addEventListener("click", e => {
+      if (e.target === addModal) {
+        closeAddModal();
+      }
+    });
+
+    document.addEventListener("keydown", e => {
+      if (e.key === "Escape" && !addModal.classList.contains("hidden")) {
+        closeAddModal();
+      }
+    });
+
+    addSetForm.addEventListener("submit", e => {
+      e.preventDefault();
+      const code = document.getElementById("newCode").value.trim().replace(/^#/, "");
+      const name = document.getElementById("newName").value.trim();
+      const price = parseFloat(document.getElementById("newPrice").value);
+      const releaseMonth = document.getElementById("newRelease").value.trim();
+      const pieces = parseInt(document.getElementById("newPieces").value, 10);
+
+      if (!code || !name || Number.isNaN(price) || price < 0 || !releaseMonth || Number.isNaN(pieces) || pieces < 1) {
+        modalFeedback.textContent = "Oops! Please fill in all boxes with valid details.";
+        modalFeedback.className = "mb-4 px-4 py-2 rounded-2xl text-base bg-pastelRoseSoft text-pastelRoseDark border-2 border-pastelInk";
+        modalFeedback.classList.remove("hidden");
+        return;
+      }
+
+      const newEntry = { code, name, price, releaseMonth, pieces };
+      saveCustomSet(newEntry);
+      setCatalog = loadCatalog();
+
+      closeAddModal();
+      codeInput.value = code;
+      handleLookup(code);
+    });
+
+    // Focus input on initial load for immediate typing
+    window.addEventListener("DOMContentLoaded", () => {
+      codeInput.focus();
+    });
+  </script>
+</body>
+</html>
