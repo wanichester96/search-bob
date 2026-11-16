@@ -3,824 +3,1680 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Box Of Bricks Malaysia — Set Code Lookup</title>
-  <!-- Google Fonts: Fredoka (bubbly headings) & Patrick Hand (cute doodle handwritten copy) -->
+  <title>Search BOB</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Patrick+Hand&display=swap" rel="stylesheet" />
-  <!-- Tailwind CSS -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          fontFamily: {
-            display: ['Fredoka', 'cursive', 'sans-serif'],
-            doodle: ['"Patrick Hand"', 'cursive', 'sans-serif'],
-          },
-          colors: {
-            pastelBg: '#DCE5DD',
-            pastelSurface: '#F3EDE2',
-            pastelInput: '#F7F2E9',
-            pastelSand: '#CFC6B8',
-            pastelRose: '#DE8F86',
-            pastelRoseDark: '#C27269',
-            pastelRoseSoft: '#F3DFDC',
-            pastelButter: '#EDD38E',
-            pastelButterHover: '#E3C578',
-            pastelButterSoft: '#F6EBC9',
-            pastelSage: '#9BB9A5',
-            pastelSageSoft: '#E2ECE4',
-            pastelLavender: '#D4CAE4',
-            pastelLavenderSoft: '#E9E3F1',
-            pastelSky: '#9FC0DF',
-            pastelSkySoft: '#E2EDF6',
-            pastelInk: '#453D38',
-            pastelMuted: '#6D645E',
-          },
-          boxShadow: {
-            doodle: '4px 4px 0px 0px #453D38',
-            doodleSm: '2.5px 2.5px 0px 0px #453D38',
-            doodleSoft: '5px 5px 0px 0px rgba(69, 61, 56, 0.16)',
-            brickRose: '0 4px 0 0 #C27269',
-            brickButter: '0 4px 0 0 #D8BE73',
-          }
-        }
-      }
-    }
-  </script>
   <style>
-    /* Cozy muted pastel sage-mint playground backdrop with soft confetti dots */
-    .playground-pattern {
-      background-color: #DCE5DD;
+    :root {
+      --bg-canvas: #dce5dd;
+      --bg-card: #f3ede2;
+      --bg-input: #f7f2e9;
+      --border-ink: #4d453e;
+      --border-soft: #c7bdb0;
+      --text-main: #443d37;
+      --text-muted: #70665d;
+
+      --pastel-rose: #e39a93;
+      --pastel-rose-light: #f5dfdc;
+      --pastel-butter: #edd694;
+      --pastel-butter-light: #f8efd4;
+      --pastel-sage: #9dc0a6;
+      --pastel-sage-light: #dfece2;
+      --pastel-sky: #9ec0d6;
+      --pastel-sky-light: #e0eef5;
+      --pastel-lavender: #c2b3d8;
+      --pastel-lavender-light: #ebe5f3;
+
+      --shadow-sticker: 4px 4px 0px #4d453e;
+      --shadow-sticker-sm: 2px 3px 0px #4d453e;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-canvas);
       background-image:
-        radial-gradient(#C5D2C7 1.8px, transparent 1.8px),
-        radial-gradient(#E3D4AE 1.6px, transparent 1.6px);
-      background-size: 32px 32px;
-      background-position: 0 0, 16px 16px;
+        radial-gradient(#c2cfc4 2px, transparent 2px),
+        radial-gradient(#ced9cf 2px, transparent 2px);
+      background-size: 36px 36px;
+      background-position: 0 0, 18px 18px;
+      color: var(--text-main);
+      font-family: 'Patrick Hand', cursive, sans-serif;
+      font-size: 19px;
+      line-height: 1.45;
+      min-height: 100vh;
+      overflow-x: hidden;
+      position: relative;
     }
 
-    /* Hand-drawn wobbly doodle border utility */
-    .doodle-box {
-      border: 2.5px solid #453D38;
-      border-radius: 26px 22px 28px 24px / 24px 28px 22px 26px;
+    h1, h2, h3, .font-doodle-bold {
+      font-family: 'Fredoka', cursive, sans-serif;
     }
 
-    .doodle-pill {
-      border: 2px solid #453D38;
-      border-radius: 999px 940px 980px 950px / 950px 980px 940px 999px;
+    /* Floating Playground Doodle Background SVGs */
+    .bg-doodles {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
     }
 
-    /* Gentle floating doodle animation */
-    @keyframes floatSlow {
-      0%, 100% {
-        transform: translateY(0px) rotate(0deg);
-      }
-      50% {
-        transform: translateY(-5px) rotate(3deg);
-      }
-    }
-    .animate-float {
-      animation: floatSlow 4.5s ease-in-out infinite;
-    }
-    .animate-float-delayed {
-      animation: floatSlow 5.2s ease-in-out 1.4s infinite;
+    .doodle-float {
+      position: absolute;
+      opacity: 0.65;
     }
 
-    /* Bouncy pop-in animation for result cards */
-    @keyframes bouncyPop {
-      0% {
-        opacity: 0;
-        transform: translateY(10px) scale(0.97);
-      }
-      70% {
-        opacity: 1;
-        transform: translateY(-2px) scale(1.01);
-      }
-      100% {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-      }
-    }
-    .animate-pop {
-      animation: bouncyPop 0.28s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    .doodle-cloud-1 { top: 6%; left: 3%; width: 130px; }
+    .doodle-cloud-2 { top: 14%; right: 4%; width: 150px; }
+    .doodle-star-1 { top: 38%; left: 5%; width: 46px; }
+    .doodle-star-2 { bottom: 18%; right: 6%; width: 54px; }
+    .doodle-blocks { bottom: 6%; left: 4%; width: 110px; }
+
+    /* Top Header */
+    header {
+      position: relative;
+      z-index: 10;
+      background: var(--bg-card);
+      border-bottom: 3px dashed var(--border-ink);
+      padding: 14px 24px;
     }
 
-    /* Custom scrollbar */
-    ::-webkit-scrollbar {
-      width: 7px;
-      height: 7px;
+    .header-inner {
+      max-width: 960px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
     }
-    ::-webkit-scrollbar-track {
-      background: #DCE5DD;
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: var(--text-main);
     }
-    ::-webkit-scrollbar-thumb {
-      background: #B8C4BA;
-      border-radius: 9999px;
+
+    .brand-mascot {
+      width: 52px;
+      height: 52px;
+      flex-shrink: 0;
+      filter: drop-shadow(2px 3px 0px var(--border-ink));
     }
-    ::-webkit-scrollbar-thumb:hover {
-      background: #9FAEA2;
+
+    .brand-title {
+      font-size: 1.55rem;
+      font-weight: 700;
+      letter-spacing: 0.3px;
+      line-height: 1.1;
+    }
+
+    .brand-sub {
+      font-size: 0.98rem;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .catalog-pill {
+      background: var(--pastel-sky-light);
+      border: 2.5px solid var(--border-ink);
+      border-radius: 999px;
+      padding: 5px 14px;
+      font-size: 0.95rem;
+      box-shadow: var(--shadow-sticker-sm);
+    }
+
+    .btn-add {
+      font-family: 'Fredoka', cursive, sans-serif;
+      font-weight: 600;
+      font-size: 0.98rem;
+      background: var(--pastel-butter);
+      color: var(--text-main);
+      border: 2.5px solid var(--border-ink);
+      border-radius: 16px;
+      padding: 8px 16px;
+      cursor: pointer;
+      box-shadow: var(--shadow-sticker-sm);
+      transition: transform 0.12s ease, box-shadow 0.12s ease, background 0.15s ease;
+    }
+
+    .btn-add:hover {
+      background: #f3df9f;
+      transform: translate(-1px, -1px);
+      box-shadow: 3px 4px 0px var(--border-ink);
+    }
+
+    .btn-add:active {
+      transform: translate(2px, 2px);
+      box-shadow: 0px 0px 0px var(--border-ink);
+    }
+
+    /* Main Container */
+    main {
+      position: relative;
+      z-index: 5;
+      max-width: 820px;
+      margin: 0 auto;
+      padding: 36px 20px 72px;
+    }
+
+    /* Hero Search Board */
+    .search-board {
+      background: var(--bg-card);
+      border: 3px solid var(--border-ink);
+      border-radius: 28px;
+      padding: 30px 26px 26px;
+      box-shadow: var(--shadow-sticker);
+      position: relative;
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .tape-strip {
+      position: absolute;
+      top: -13px;
+      left: 50%;
+      transform: translateX(-50%) rotate(-1.8deg);
+      width: 128px;
+      height: 24px;
+      background: rgba(227, 154, 147, 0.72);
+      border: 2px dashed rgba(77, 69, 62, 0.45);
+      border-radius: 4px;
+    }
+
+    .hero-title {
+      font-size: 2.1rem;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 4px;
+      display: inline-block;
+    }
+
+    .squiggle-svg {
+      display: block;
+      margin: 0 auto 10px;
+      width: 210px;
+      height: 14px;
+    }
+
+    .hero-hint {
+      color: var(--text-muted);
+      font-size: 1.08rem;
+      margin-bottom: 20px;
+    }
+
+    /* Search Input Box */
+    .search-bar-wrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--bg-input);
+      border: 3px solid var(--border-ink);
+      border-radius: 20px;
+      padding: 6px 10px 6px 16px;
+      box-shadow: inset 2px 2px 0px rgba(77, 69, 62, 0.08);
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .search-bar-wrap:focus-within {
+      background: #fbf7ef;
+      outline: 3px solid var(--pastel-sage);
+    }
+
+    .search-icon {
+      width: 24px;
+      height: 24px;
+      flex-shrink: 0;
+      color: var(--text-muted);
+    }
+
+    #searchInput {
+      flex: 1;
+      border: none;
+      background: transparent;
+      font-family: 'Fredoka', cursive, sans-serif;
+      font-size: 1.2rem;
+      font-weight: 500;
+      color: var(--text-main);
+      outline: none;
+      min-width: 0;
+    }
+
+    #searchInput::placeholder {
+      font-family: 'Patrick Hand', cursive, sans-serif;
+      font-weight: 400;
+      color: #968b80;
+    }
+
+    .btn-clear {
+      display: none;
+      font-family: 'Fredoka', cursive, sans-serif;
+      font-size: 0.9rem;
+      background: var(--pastel-rose-light);
+      color: var(--text-main);
+      border: 2px solid var(--border-ink);
+      border-radius: 12px;
+      padding: 4px 11px;
+      cursor: pointer;
+    }
+
+    .btn-clear.visible {
+      display: inline-block;
+    }
+
+    /* Sample Sticker Pills */
+    .sample-row {
+      margin-top: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .sample-label {
+      font-size: 0.98rem;
+      color: var(--text-muted);
+      margin-right: 2px;
+    }
+
+    .sample-pill {
+      font-family: 'Fredoka', cursive, sans-serif;
+      font-size: 0.9rem;
+      font-weight: 600;
+      background: var(--pastel-lavender-light);
+      color: var(--text-main);
+      border: 2px solid var(--border-ink);
+      border-radius: 999px;
+      padding: 3px 12px;
+      cursor: pointer;
+      box-shadow: 2px 2px 0px var(--border-ink);
+      transition: transform 0.1s ease;
+    }
+
+    .sample-pill:nth-child(3n+2) { background: var(--pastel-sage-light); }
+    .sample-pill:nth-child(3n) { background: var(--pastel-butter-light); }
+
+    .sample-pill:hover {
+      transform: translateY(-2px);
+    }
+
+    /* Results Area */
+    .results-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+      padding: 0 6px;
+      color: var(--text-muted);
+      font-size: 1.02rem;
+    }
+
+    .results-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+
+    /* Result Sticker Card (Name & Price Only + Discount Pills) */
+    .set-card {
+      background: var(--bg-card);
+      border: 3px solid var(--border-ink);
+      border-radius: 24px;
+      padding: 22px 24px;
+      box-shadow: var(--shadow-sticker);
+      position: relative;
+      transition: transform 0.14s ease;
+    }
+
+    .set-card:hover {
+      transform: translateY(-2px);
+    }
+
+    .card-top-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: 'Fredoka', cursive, sans-serif;
+      font-size: 0.92rem;
+      font-weight: 600;
+      background: var(--pastel-sky-light);
+      border: 2px solid var(--border-ink);
+      border-radius: 12px;
+      padding: 3px 12px;
+      margin-bottom: 14px;
+      box-shadow: 2px 2px 0px var(--border-ink);
+    }
+
+    .card-fields {
+      display: grid;
+      grid-template-columns: 1.55fr 1fr;
+      gap: 16px;
+      align-items: stretch;
+    }
+
+    @media (max-width: 640px) {
+      .card-fields {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .field-sticker {
+      border: 2.5px solid var(--border-ink);
+      border-radius: 18px;
+      padding: 14px 16px;
+      box-shadow: 2px 3px 0px var(--border-ink);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .field-name {
+      background: var(--pastel-rose-light);
+      transform: rotate(-0.5deg);
+    }
+
+    .field-price {
+      background: var(--pastel-butter-light);
+      transform: rotate(0.6deg);
+    }
+
+    .field-label {
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+      font-weight: 700;
+    }
+
+    .field-value-name {
+      font-family: 'Fredoka', cursive, sans-serif;
+      font-size: 1.28rem;
+      font-weight: 600;
+      color: var(--text-main);
+      line-height: 1.3;
+    }
+
+    .price-display-row {
+      display: flex;
+      align-items: baseline;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .field-value-price {
+      font-family: 'Fredoka', cursive, sans-serif;
+      font-size: 1.55rem;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .price-original-strike {
+      font-family: 'Fredoka', cursive, sans-serif;
+      font-size: 1.05rem;
+      color: var(--text-muted);
+      text-decoration: line-through;
+    }
+
+    .discount-saved-tag {
+      display: inline-block;
+      margin-top: 4px;
+      font-size: 0.92rem;
+      font-weight: 700;
+      color: #355e42;
+      background: var(--pastel-sage-light);
+      border: 1.5px solid var(--border-ink);
+      border-radius: 8px;
+      padding: 1px 8px;
+      width: fit-content;
+    }
+
+    /* Quick Discount Buttons Bar */
+    .discount-bar {
+      margin-top: 16px;
+      padding-top: 14px;
+      border-top: 2px dashed var(--border-soft);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .discount-label {
+      font-size: 1rem;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .discount-buttons {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .btn-disc {
+      font-family: 'Fredoka', cursive, sans-serif;
+      font-size: 0.92rem;
+      font-weight: 600;
+      padding: 5px 13px;
+      border: 2px solid var(--border-ink);
+      border-radius: 12px;
+      background: var(--bg-input);
+      color: var(--text-main);
+      cursor: pointer;
+      box-shadow: 2px 2px 0px var(--border-ink);
+      transition: transform 0.1s ease, background 0.12s ease;
+    }
+
+    .btn-disc:hover {
+      background: var(--pastel-sage-light);
+      transform: translateY(-1px);
+    }
+
+    .btn-disc.active {
+      background: var(--pastel-sage);
+      color: #27332a;
+      transform: translate(1px, 1px);
+      box-shadow: 1px 1px 0px var(--border-ink);
+    }
+
+    .btn-disc-reset {
+      font-family: 'Patrick Hand', cursive, sans-serif;
+      font-size: 0.95rem;
+      padding: 4px 10px;
+      border: 2px dashed var(--border-ink);
+      border-radius: 10px;
+      background: transparent;
+      color: var(--text-muted);
+      cursor: pointer;
+    }
+
+    .btn-disc-reset:hover {
+      background: var(--pastel-rose-light);
+      color: var(--text-main);
+    }
+
+    /* Empty / Initial States */
+    .state-box {
+      background: var(--bg-card);
+      border: 3px dashed var(--border-ink);
+      border-radius: 24px;
+      padding: 34px 22px;
+      text-align: center;
+      color: var(--text-muted);
+    }
+
+    .state-box h3 {
+      font-size: 1.35rem;
+      color: var(--text-main);
+      margin-bottom: 6px;
+    }
+
+    /* Modal for Adding New Set Code */
+    .modal-backdrop {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(68, 61, 55, 0.45);
+      z-index: 50;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .modal-backdrop.open {
+      display: flex;
+    }
+
+    .modal-card {
+      background: var(--bg-card);
+      border: 3px solid var(--border-ink);
+      border-radius: 26px;
+      padding: 26px 24px;
+      width: 100%;
+      max-width: 440px;
+      box-shadow: 6px 6px 0px var(--border-ink);
+      position: relative;
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+
+    .modal-header h2 {
+      font-size: 1.45rem;
+    }
+
+    .btn-close-modal {
+      font-family: 'Fredoka', cursive, sans-serif;
+      font-size: 1.1rem;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      border: 2px solid var(--border-ink);
+      background: var(--pastel-rose-light);
+      cursor: pointer;
+    }
+
+    .form-group {
+      margin-bottom: 14px;
+    }
+
+    .form-group label {
+      display: block;
+      font-weight: 700;
+      margin-bottom: 4px;
+      font-size: 1rem;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 9px 13px;
+      background: var(--bg-input);
+      border: 2.5px solid var(--border-ink);
+      border-radius: 14px;
+      font-family: 'Patrick Hand', cursive, sans-serif;
+      font-size: 1.1rem;
+      color: var(--text-main);
+      outline: none;
+    }
+
+    .form-group input:focus {
+      background: #fbf7ef;
+      border-color: #5f876b;
+    }
+
+    .modal-footer {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .btn-save {
+      font-family: 'Fredoka', cursive, sans-serif;
+      font-weight: 600;
+      font-size: 1rem;
+      background: var(--pastel-sage);
+      color: var(--text-main);
+      border: 2.5px solid var(--border-ink);
+      border-radius: 14px;
+      padding: 8px 20px;
+      cursor: pointer;
+      box-shadow: var(--shadow-sticker-sm);
+    }
+
+    .btn-cancel {
+      font-family: 'Fredoka', cursive, sans-serif;
+      font-size: 0.98rem;
+      background: var(--bg-input);
+      color: var(--text-muted);
+      border: 2px solid var(--border-ink);
+      border-radius: 14px;
+      padding: 8px 16px;
+      cursor: pointer;
     }
   </style>
 </head>
-<body class="playground-pattern text-pastelInk font-doodle text-lg min-h-screen flex flex-col antialiased selection:bg-pastelButter selection:text-pastelInk relative overflow-x-hidden">
+<body>
 
-  <!-- Top Playful Pastel Bunting / Brick Trim -->
-  <div class="w-full h-3 bg-gradient-to-r from-pastelRose via-pastelButter via-pastelSage to-pastelSky border-b-2 border-pastelInk"></div>
-
-  <!-- Decorative Floating Playground Doodles (Non-intrusive, pointer-events-none) -->
-  <div aria-hidden="true" class="pointer-events-none fixed inset-0 overflow-hidden z-0">
-    <!-- Top Left Hand-drawn Pastel Cloud -->
-    <svg class="hidden sm:block absolute top-24 left-6 w-24 h-16 text-pastelSky/60 animate-float" viewBox="0 0 120 75" fill="none">
-      <path d="M26 58H93C104 58 112 50 112 40C112 31 105 24 96 23C93 11 82 4 70 4C59 4 50 10 46 19C43 18 40 17 37 17C25 17 16 26 16 37C10 39 6 44 6 50C6 55 12 58 26 58Z" fill="#EDF5FC" stroke="#4B423D" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Decorative Playground Doodles -->
+  <div class="bg-doodles" aria-hidden="true">
+    <svg class="doodle-float doodle-cloud-1" viewBox="0 0 140 80" fill="none">
+      <path d="M32 62H108C121 62 130 53 130 41C130 30 121 21 110 21C106 10 95 4 82 4C67 4 55 14 52 28C48 26 44 25 39 25C24 25 12 36 12 49C12 57 21 62 32 62Z" fill="#f3ede2" stroke="#4d453e" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
     </svg>
-
-    <!-- Top Right Doodle Star & Sparkles -->
-    <svg class="hidden sm:block absolute top-28 right-8 w-16 h-16 text-pastelButter animate-float-delayed" viewBox="0 0 64 64" fill="none">
-      <path d="M32 6L38.5 22.5L56 24L42.5 35.5L46.5 53L32 43.5L17.5 53L21.5 35.5L8 24L25.5 22.5L32 6Z" fill="#F2DC9B" stroke="#4B423D" stroke-width="2.5" stroke-linejoin="round"/>
-      <circle cx="12" cy="12" r="2.5" fill="#E2958C"/>
-      <circle cx="53" cy="48" r="2.5" fill="#A3C1AD"/>
+    <svg class="doodle-float doodle-cloud-2" viewBox="0 0 150 85" fill="none">
+      <path d="M35 66H116C130 66 140 56 140 43C140 31 130 22 118 22C113 10 101 4 87 4C71 4 58 15 55 30C51 28 46 27 41 27C25 27 13 38 13 52C13 60 23 66 35 66Z" fill="#e0eef5" stroke="#4d453e" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
     </svg>
-
-    <!-- Bottom Left Little Stacked Pastel Building Blocks -->
-    <svg class="hidden md:block absolute bottom-16 left-8 w-24 h-24 animate-float-delayed" viewBox="0 0 100 100" fill="none">
-      <!-- Bottom Sage Block -->
-      <rect x="14" y="56" width="52" height="26" rx="6" fill="#A3C1AD" stroke="#4B423D" stroke-width="2.5"/>
-      <rect x="22" y="50" width="12" height="6" rx="2" fill="#A3C1AD" stroke="#4B423D" stroke-width="2.5"/>
-      <rect x="46" y="50" width="12" height="6" rx="2" fill="#A3C1AD" stroke="#4B423D" stroke-width="2.5"/>
-      <!-- Top Rose Block -->
-      <rect x="30" y="24" width="46" height="26" rx="6" fill="#E2958C" stroke="#4B423D" stroke-width="2.5"/>
-      <rect x="38" y="18" width="11" height="6" rx="2" fill="#E2958C" stroke="#4B423D" stroke-width="2.5"/>
-      <rect x="57" y="18" width="11" height="6" rx="2" fill="#E2958C" stroke="#4B423D" stroke-width="2.5"/>
+    <svg class="doodle-float doodle-star-1" viewBox="0 0 50 50" fill="none">
+      <path d="M25 4L30.5 18.5L46 19.5L34 29.5L38 45L25 36.5L12 45L16 29.5L4 19.5L19.5 18.5L25 4Z" fill="#edd694" stroke="#4d453e" stroke-width="3" stroke-linejoin="round"/>
     </svg>
-
-    <!-- Bottom Right Doodle Swirl & Heart -->
-    <svg class="hidden md:block absolute bottom-20 right-10 w-20 h-20 animate-float" viewBox="0 0 80 80" fill="none">
-      <path d="M40 62C40 62 16 47 16 30C16 22 22 16 29 16C34 16 38 19 40 23C42 19 46 16 51 16C58 16 64 22 64 30C64 47 40 62 40 62Z" fill="#F9ECEA" stroke="#4B423D" stroke-width="2.5" stroke-linejoin="round"/>
-      <path d="M26 28C27 25 30 23 33 23" stroke="#4B423D" stroke-width="2" stroke-linecap="round"/>
+    <svg class="doodle-float doodle-star-2" viewBox="0 0 50 50" fill="none">
+      <path d="M25 4L30.5 18.5L46 19.5L34 29.5L38 45L25 36.5L12 45L16 29.5L4 19.5L19.5 18.5L25 4Z" fill="#e39a93" stroke="#4d453e" stroke-width="3" stroke-linejoin="round"/>
+    </svg>
+    <svg class="doodle-float doodle-blocks" viewBox="0 0 120 100" fill="none">
+      <rect x="14" y="54" width="44" height="32" rx="6" fill="#e39a93" stroke="#4d453e" stroke-width="3"/>
+      <rect x="21" y="47" width="11" height="7" rx="2" fill="#e39a93" stroke="#4d453e" stroke-width="2.5"/>
+      <rect x="40" y="47" width="11" height="7" rx="2" fill="#e39a93" stroke="#4d453e" stroke-width="2.5"/>
+      <rect x="62" y="54" width="44" height="32" rx="6" fill="#9ec0d6" stroke="#4d453e" stroke-width="3"/>
+      <rect x="69" y="47" width="11" height="7" rx="2" fill="#9ec0d6" stroke="#4d453e" stroke-width="2.5"/>
+      <rect x="88" y="47" width="11" height="7" rx="2" fill="#9ec0d6" stroke="#4d453e" stroke-width="2.5"/>
+      <rect x="38" y="16" width="44" height="32" rx="6" fill="#edd694" stroke="#4d453e" stroke-width="3"/>
+      <rect x="45" y="9" width="11" height="7" rx="2" fill="#edd694" stroke="#4d453e" stroke-width="2.5"/>
+      <rect x="64" y="9" width="11" height="7" rx="2" fill="#edd694" stroke="#4d453e" stroke-width="2.5"/>
     </svg>
   </div>
 
-  <!-- Minimalist Playful Header -->
-  <header class="w-full bg-pastelSurface/95 backdrop-blur-sm border-b-2 border-pastelInk sticky top-0 z-30">
-    <div class="max-w-4xl mx-auto px-4 sm:px-6 h-18 sm:h-20 py-3 flex items-center justify-between gap-3">
-      <!-- Brand Identity with Cute Smiley Brick Mascot -->
-      <button id="brandResetBtn" type="button" class="flex items-center gap-3 text-left group focus:outline-none">
-        <div class="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-pastelRose border-2 border-pastelInk shadow-doodleSm flex items-center justify-center group-hover:-rotate-3 group-active:translate-y-0.5 transition-transform shrink-0">
-          <!-- Cute Hand-Drawn Smiley Brick SVG -->
-          <svg class="w-8 h-8" viewBox="0 0 36 36" fill="none" aria-hidden="true">
-            <rect x="9" y="5" width="6" height="4" rx="1.5" fill="#F2DC9B" stroke="#4B423D" stroke-width="2"/>
-            <rect x="21" y="5" width="6" height="4" rx="1.5" fill="#F2DC9B" stroke="#4B423D" stroke-width="2"/>
-            <rect x="5" y="9" width="26" height="21" rx="5" fill="#FCF5DF" stroke="#4B423D" stroke-width="2"/>
-            <!-- Cute Eyes & Smile -->
-            <circle cx="13.5" cy="18" r="1.6" fill="#4B423D"/>
-            <circle cx="22.5" cy="18" r="1.6" fill="#4B423D"/>
-            <path d="M14.5 22.5C15.8 24.5 20.2 24.5 21.5 22.5" stroke="#4B423D" stroke-width="2" stroke-linecap="round"/>
-            <!-- Rosy Cheeks -->
-            <circle cx="10.5" cy="20.5" r="1.6" fill="#E2958C" opacity="0.7"/>
-            <circle cx="25.5" cy="20.5" r="1.6" fill="#E2958C" opacity="0.7"/>
-          </svg>
-        </div>
-        <div>
-          <span class="font-display font-bold text-lg sm:text-xl tracking-tight text-pastelInk leading-none block">
-            Box Of Bricks <span class="text-pastelRoseDark">Malaysia</span>
-          </span>
-          <span class="text-sm sm:text-base text-pastelMuted leading-none block mt-0.5">
-            Set Code Playground Finder ✦
-          </span>
-        </div>
-      </button>
-
-      <!-- Cute Sticker Button to Add Set Code -->
-      <button
-        id="openModalBtn"
-        type="button"
-        class="inline-flex items-center gap-1.5 px-4 py-2 rounded-2xl font-display text-sm sm:text-base font-semibold text-pastelInk bg-pastelButter hover:bg-pastelButterHover border-2 border-pastelInk shadow-doodleSm hover:-translate-y-0.5 active:translate-y-0.5 transition-all shrink-0"
-      >
-        <svg class="w-4 h-4 text-pastelInk" fill="none" stroke="currentColor" stroke-width="2.8" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+  <!-- Header -->
+  <header>
+    <div class="header-inner">
+      <div class="brand">
+        <svg class="brand-mascot" viewBox="0 0 64 64" fill="none" aria-hidden="true">
+          <rect x="16" y="6" width="12" height="9" rx="3" fill="#edd694" stroke="#4d453e" stroke-width="3"/>
+          <rect x="36" y="6" width="12" height="9" rx="3" fill="#edd694" stroke="#4d453e" stroke-width="3"/>
+          <rect x="8" y="14" width="48" height="42" rx="12" fill="#e39a93" stroke="#4d453e" stroke-width="3"/>
+          <circle cx="24" cy="33" r="3.2" fill="#4d453e"/>
+          <circle cx="40" cy="33" r="3.2" fill="#4d453e"/>
+          <circle cx="18" cy="39" r="3.5" fill="#f5dfdc"/>
+          <circle cx="46" cy="39" r="3.5" fill="#f5dfdc"/>
+          <path d="M26 41C28.5 44.5 35.5 44.5 38 41" stroke="#4d453e" stroke-width="3" stroke-linecap="round"/>
         </svg>
-        <span>Add Set Code</span>
-      </button>
+        <div>
+          <div class="brand-title font-doodle-bold">Box Of Bricks Malaysia</div>
+          <div class="brand-sub">LEGO® Certified Store • Quick Price & Code Finder</div>
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <span class="catalog-pill" id="catalogCountBadge">0 items</span>
+        <button type="button" class="btn-add" id="openAddModalBtn">+ Add Set Code</button>
+      </div>
     </div>
   </header>
 
-  <!-- Main Content Area -->
-  <main class="relative z-10 flex-1 w-full max-w-3xl mx-auto px-4 sm:px-6 pt-9 sm:pt-14 pb-16 flex flex-col items-center">
-    
-    <!-- Front Page Hero & Search Focus -->
-    <section class="w-full text-center mb-7 sm:mb-9">
-      <div class="inline-flex items-center gap-2 px-4 py-1 doodle-pill bg-pastelSageSoft text-pastelInk font-display text-xs sm:text-sm font-semibold tracking-wide mb-4 shadow-doodleSm">
-        <span class="w-2.5 h-2.5 rounded-full bg-pastelRose border border-pastelInk"></span>
-        LEGO® Certified Store MY Quick Finder
-      </div>
+  <!-- Main Lookup Area -->
+  <main>
+    <section class="search-board">
+      <div class="tape-strip" aria-hidden="true"></div>
+      <h1 class="hero-title">Find Box Code</h1>
+      <svg class="squiggle-svg" viewBox="0 0 210 14" fill="none" aria-hidden="true">
+        <path d="M4 8C22 2 38 13 56 7C74 1 90 13 108 7C126 1 142 13 160 7C178 1 194 12 206 6" stroke="#e39a93" stroke-width="4" stroke-linecap="round"/>
+      </svg>
+      <p class="hero-hint">Type a LEGO® box code (like <strong>40813</strong> or <strong>21065</strong>) or set name below!</p>
 
-      <div class="relative inline-block">
-        <h1 class="font-display text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight text-pastelInk">
-          Find Box Code
-        </h1>
-        <!-- Hand-drawn Squiggly Doodle Underline -->
-        <svg class="w-48 sm:w-64 h-4 mx-auto -mt-1 text-pastelRose" viewBox="0 0 220 16" fill="none" aria-hidden="true">
-          <path d="M4 10C24 3 44 15 64 8C84 1 104 15 124 8C144 1 164 15 184 8C198 3 208 9 216 7" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
+      <div class="search-bar-wrap">
+        <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="7"></circle>
+          <line x1="20" y1="20" x2="16.2" y2="16.2"></line>
         </svg>
-      </div>
-
-      <p class="mt-2.5 text-lg sm:text-xl text-pastelMuted max-w-md mx-auto leading-snug">
-        Pop a LEGO® set number into the box below to peek at its name, MYR price, release month & pieces!
-      </p>
-    </section>
-
-    <!-- Prominent Chunky Doodle Search Bar -->
-    <section class="w-full max-w-2xl mb-6">
-      <form id="searchForm" class="relative flex items-center" novalidate>
-        <!-- Left Hand-drawn Magnifier Icon -->
-        <div class="pointer-events-none absolute inset-y-0 left-0 pl-4 sm:pl-5 flex items-center text-pastelInk/75">
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35m1.85-5.15a7 7 0 11-14 0 7 7 0 0114 0z" />
-          </svg>
-        </div>
-
         <input
-          id="codeInput"
           type="text"
-          inputmode="numeric"
+          id="searchInput"
+          placeholder="Enter box code e.g. 40813, 10342, 75375..."
           autocomplete="off"
-          spellcheck="false"
-          placeholder="Type a set code (e.g. 11388, 21065, 11390, 76352)..."
-          aria-label="Find Box Code"
-          class="w-full bg-pastelSurface text-pastelInk placeholder-pastelMuted/75 font-doodle text-xl sm:text-2xl pl-12 sm:pl-14 pr-28 sm:pr-32 py-3.5 sm:py-4 doodle-box shadow-doodle focus:bg-pastelInput focus:ring-4 focus:ring-pastelButter/60 focus:outline-none transition-all"
+          autofocus
         />
+        <button type="button" class="btn-clear" id="clearSearchBtn">Clear</button>
+      </div>
 
-        <!-- Clear Button -->
-        <button
-          id="clearBtn"
-          type="button"
-          aria-label="Clear search"
-          class="hidden absolute right-20 sm:right-24 p-2 text-pastelMuted hover:text-pastelInk rounded-full transition-colors"
-        >
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.6" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-          </svg>
-        </button>
-
-        <!-- Submit Search Button -->
-        <button
-          type="submit"
-          aria-label="Search set code"
-          class="absolute right-2.5 sm:right-3 px-4 sm:px-5 py-2 sm:py-2.5 rounded-2xl bg-pastelRose hover:bg-pastelRoseDark text-white font-display font-semibold text-base sm:text-lg border-2 border-pastelInk shadow-doodleSm active:translate-y-0.5 transition-all"
-        >
-          Find!
-        </button>
-      </form>
-
-      <!-- Quick Sample Set Code Sticker Pills -->
-      <div class="mt-5 flex flex-wrap items-center justify-center gap-2.5">
-        <span class="text-base sm:text-lg text-pastelMuted mr-1">Try a sticker code:</span>
-        <button type="button" data-code="11388" class="sample-pill px-3.5 py-1 doodle-pill font-display text-sm font-semibold bg-pastelButterSoft hover:bg-pastelButter text-pastelInk shadow-doodleSm hover:-translate-y-0.5 active:translate-y-0 transition-all">
-          11388
-        </button>
-        <button type="button" data-code="21065" class="sample-pill px-3.5 py-1 doodle-pill font-display text-sm font-semibold bg-pastelSkySoft hover:bg-pastelSky/60 text-pastelInk shadow-doodleSm hover:-translate-y-0.5 active:translate-y-0 transition-all">
-          21065
-        </button>
-        <button type="button" data-code="11390" class="sample-pill px-3.5 py-1 doodle-pill font-display text-sm font-semibold bg-pastelRoseSoft hover:bg-pastelRose/50 text-pastelInk shadow-doodleSm hover:-translate-y-0.5 active:translate-y-0 transition-all">
-          11390
-        </button>
-        <button type="button" data-code="76352" class="sample-pill px-3.5 py-1 doodle-pill font-display text-sm font-semibold bg-pastelSageSoft hover:bg-pastelSage/60 text-pastelInk shadow-doodleSm hover:-translate-y-0.5 active:translate-y-0 transition-all">
-          76352
-        </button>
-        <button type="button" data-code="10371" class="sample-pill px-3.5 py-1 doodle-pill font-display text-sm font-semibold bg-pastelLavenderSoft hover:bg-pastelLavender text-pastelInk shadow-doodleSm hover:-translate-y-0.5 active:translate-y-0 transition-all">
-          10371
-        </button>
-        <button type="button" data-code="763" class="sample-pill px-3.5 py-1 rounded-full border-2 border-dashed border-pastelInk/70 font-display text-sm font-semibold bg-pastelSurface hover:bg-pastelButterSoft text-pastelMuted hover:text-pastelInk hover:-translate-y-0.5 transition-all" title="Test partial code search">
-          763*
-        </button>
+      <div class="sample-row">
+        <span class="sample-label">Try codes:</span>
+        <button type="button" class="sample-pill" data-code="40813">40813</button>
+        <button type="button" class="sample-pill" data-code="21065">21065</button>
+        <button type="button" class="sample-pill" data-code="10342">10342</button>
+        <button type="button" class="sample-pill" data-code="75375">75375</button>
+        <button type="button" class="sample-pill" data-code="76352">76352</button>
+        <button type="button" class="sample-pill" data-code="42172">42172</button>
       </div>
     </section>
 
-    <!-- Dynamic Results Container -->
-    <section id="resultsArea" class="w-full max-w-2xl mt-3" aria-live="polite">
-      <!-- Populated dynamically via JavaScript -->
-    </section>
+    <!-- Results Header & Container -->
+    <div class="results-meta" id="resultsMeta" style="display: none;">
+      <span id="resultsCountText"></span>
+      <span>Tap a discount pill to calculate promo price</span>
+    </div>
 
+    <div id="resultsContainer" class="results-grid">
+      <div class="state-box">
+        <h3>Ready to look up a box!</h3>
+        <p>Start typing a set code above to see its official name, RM price, and quick 20% / 25% / 35% discounts.</p>
+      </div>
+    </div>
   </main>
 
-  <!-- Minimalist Playful Footer -->
-  <footer class="relative z-10 w-full border-t-2 border-pastelInk bg-pastelSurface/90 py-4 px-4 text-center">
-    <p class="text-base sm:text-lg text-pastelMuted">
-      Box Of Bricks Malaysia — Set Code Lookup • Prices in Malaysian Ringgit (MYR)
-    </p>
-  </footer>
-
-  <!-- Modal: Add Custom Set Code -->
-  <div
-    id="addModal"
-    class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-pastelInk/40 backdrop-blur-xs"
-    role="dialog"
-    aria-modal="true"
-    aria-labelledby="modalTitle"
-  >
-    <div class="bg-pastelSurface w-full max-w-md doodle-box shadow-doodle overflow-hidden animate-pop relative">
-      <!-- Cute Pastel Washi Tape Strip on Top -->
-      <div class="h-3 w-full bg-gradient-to-r from-pastelButter via-pastelSage to-pastelRose border-b-2 border-pastelInk"></div>
-
-      <div class="p-6 sm:p-7">
-        <div class="flex items-center justify-between mb-4">
-          <div>
-            <h2 id="modalTitle" class="font-display text-2xl font-bold text-pastelInk">Add New Set Code ✎</h2>
-            <p class="text-base text-pastelMuted">Save a new LEGO® box code to your doodle catalog!</p>
-          </div>
-          <button
-            id="closeModalBtn"
-            type="button"
-            aria-label="Close modal"
-            class="p-2 rounded-full border-2 border-transparent hover:border-pastelInk text-pastelMuted hover:text-pastelInk hover:bg-pastelButterSoft transition-all"
-          >
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          </button>
-        </div>
-
-        <!-- Inline Feedback Message Box (No alert()) -->
-        <div id="modalFeedback" class="hidden mb-4 px-4 py-2.5 rounded-2xl text-base"></div>
-
-        <form id="addSetForm" class="space-y-4">
-          <div>
-            <label for="newCode" class="block font-display text-sm font-semibold text-pastelInk mb-1">
-              Set Code <span class="text-pastelRoseDark">*</span>
-            </label>
-            <input
-              id="newCode"
-              type="text"
-              required
-              placeholder="e.g., 75397"
-              class="w-full px-4 py-2 rounded-2xl bg-pastelInput border-2 border-pastelInk text-pastelInk focus:bg-pastelButterSoft/60 focus:outline-none text-lg"
-            />
-          </div>
-
-          <div>
-            <label for="newName" class="block font-display text-sm font-semibold text-pastelInk mb-1">
-              Set Name <span class="text-pastelRoseDark">*</span>
-            </label>
-            <input
-              id="newName"
-              type="text"
-              required
-              placeholder="e.g., Jabba's Sail Barge"
-              class="w-full px-4 py-2 rounded-2xl bg-pastelInput border-2 border-pastelInk text-pastelInk focus:bg-pastelButterSoft/60 focus:outline-none text-lg"
-            />
-          </div>
-
-          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-            <div>
-              <label for="newPrice" class="block font-display text-sm font-semibold text-pastelInk mb-1">
-                Price (RM) <span class="text-pastelRoseDark">*</span>
-              </label>
-              <input
-                id="newPrice"
-                type="number"
-                step="0.01"
-                min="0"
-                required
-                placeholder="2299.00"
-                class="w-full px-3.5 py-2 rounded-2xl bg-pastelInput border-2 border-pastelInk text-pastelInk focus:bg-pastelButterSoft/60 focus:outline-none text-lg"
-              />
-            </div>
-
-            <div>
-              <label for="newRelease" class="block font-display text-sm font-semibold text-pastelInk mb-1">
-                Release Month <span class="text-pastelRoseDark">*</span>
-              </label>
-              <input
-                id="newRelease"
-                type="text"
-                required
-                placeholder="Oct-26"
-                class="w-full px-3.5 py-2 rounded-2xl bg-pastelInput border-2 border-pastelInk text-pastelInk focus:bg-pastelButterSoft/60 focus:outline-none text-lg"
-              />
-            </div>
-
-            <div>
-              <label for="newPieces" class="block font-display text-sm font-semibold text-pastelInk mb-1">
-                Pieces <span class="text-pastelRoseDark">*</span>
-              </label>
-              <input
-                id="newPieces"
-                type="number"
-                min="1"
-                required
-                placeholder="3942"
-                class="w-full px-3.5 py-2 rounded-2xl bg-pastelInput border-2 border-pastelInk text-pastelInk focus:bg-pastelButterSoft/60 focus:outline-none text-lg"
-              />
-            </div>
-          </div>
-
-          <div class="pt-2 flex items-center justify-end gap-3">
-            <button
-              id="cancelModalBtn"
-              type="button"
-              class="px-4 py-2 rounded-2xl font-display text-sm font-semibold text-pastelMuted hover:text-pastelInk hover:bg-pastelBg border-2 border-transparent hover:border-pastelInk/30 transition-all"
-            >
-              Cancel
-            </button>
-            <button
-              type="submit"
-              class="px-5 py-2 rounded-2xl bg-pastelRose hover:bg-pastelRoseDark text-white font-display text-base font-semibold border-2 border-pastelInk shadow-doodleSm active:translate-y-0.5 transition-all"
-            >
-              Save Sticker!
-            </button>
-          </div>
-        </form>
+  <!-- Add New Set Modal -->
+  <div class="modal-backdrop" id="addModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2 id="modalTitle">Add New Box Code</h2>
+        <button type="button" class="btn-close-modal" id="closeAddModalBtn" aria-label="Close">✕</button>
       </div>
+      <form id="addSetForm">
+        <div class="form-group">
+          <label for="newCode">Box / Set Code *</label>
+          <input type="text" id="newCode" placeholder="e.g. 76999" required />
+        </div>
+        <div class="form-group">
+          <label for="newName">Set Name *</label>
+          <input type="text" id="newName" placeholder="e.g. LEGO® Creator Cozy House" required />
+        </div>
+        <div class="form-group">
+          <label for="newPrice">Unit Price (RM) *</label>
+          <input type="number" id="newPrice" step="0.01" min="0" placeholder="e.g. 249" required />
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn-cancel" id="cancelAddBtn">Cancel</button>
+          <button type="submit" class="btn-save">Save Sticker</button>
+        </div>
+      </form>
     </div>
   </div>
 
   <script>
-    /**
-     * Built-in Box of Bricks Malaysia Set Catalog
-     * Each entry contains strictly: code, name, price (MYR), releaseMonth, and pieces.
-     */
-    const DEFAULT_SETS = [
-      { code: "11388", name: "Venetian Neighborhood", price: 2099.00, releaseMonth: "Nov-26", pieces: 5682 },
-      { code: "21065", name: "Sagrada Família", price: 3199.00, releaseMonth: "Nov-26", pieces: 12060 },
-      { code: "11390", name: "Dragon Ball: Shenron & Goku", price: 599.00, releaseMonth: "Nov-26", pieces: 1764 },
-      { code: "10371", name: "Cozy Plants", price: 89.00, releaseMonth: "Nov-26", pieces: 294 },
-      { code: "76352", name: "Avengers: Doomsday New Avengers Tower", price: 479.00, releaseMonth: "Oct-26", pieces: 1038 },
-      { code: "76346", name: "Spider-Man Hero Figure", price: 449.00, releaseMonth: "Jun-26", pieces: 876 },
-      { code: "76345", name: "Doctor Doom Bust", price: 219.00, releaseMonth: "Sep-26", pieces: 512 },
-      { code: "76294", name: "X-Men: The X-Mansion", price: 1499.00, releaseMonth: "Nov-24", pieces: 3093 },
-      { code: "76343", name: "Epic Battle: Hulkbuster vs. The Hulk", price: 219.00, releaseMonth: "Jan-26", pieces: 413 },
-      { code: "10316", name: "THE LORD OF THE RINGS: RIVERDELL", price: 2199.00, releaseMonth: "Mar-23", pieces: 6167 },
-      { code: "42172", name: "McLaren P1™", price: 1999.00, releaseMonth: "Aug-24", pieces: 3893 },
-      { code: "21348", name: "Dungeons & Dragons: Red Dragon's Tale", price: 1599.00, releaseMonth: "Apr-24", pieces: 3745 }
+    // Full Catalog extracted from search bob 2.pdf
+    const PDF_CATALOG = [
+      { code: "GIFT-100", name: "Box Of Bricks Gift Card RM100", price: 100 },
+      { code: "GIFT-50", name: "Box Of Bricks Gift Card RM50", price: 50 },
+      { code: "GIFT-500", name: "Box Of Bricks Gift Card RM500", price: 500 },
+      { code: "40468", name: "LEGO® Creator Yellow Taxi", price: 49 },
+      { code: "40547", name: "LEGO® BrickHeadz Obi Wan Kenobi TN & Darth Vader TM", price: 89 },
+      { code: "40638", name: "LEGO® Iconic Heart Ornament", price: 59 },
+      { code: "40622", name: "LEGO® BrickHeadz Disney 100th Celebration", price: 179 },
+      { code: "40618", name: "LEGO® BrickHeadz Kingsley Shacklebolt TM And Nymphadora Tonks TM", price: 89 },
+      { code: "40634", name: "LEGO® Iconic Icons Of Play", price: 449 },
+      { code: "40715", name: "LEGO® Iconic Alien Pack", price: 69 },
+      { code: "40676", name: "LEGO® BrickHeadz The Phantom Menace TM", price: 249 },
+      { code: "40716", name: "LEGO® Iconic Alien Planet Habitat", price: 69 },
+      { code: "40668", name: "LEGO® BrickHeadz Captain America And Red Hulk Figures", price: 89 },
+      { code: "40813", name: "LEGO® Lucky Cat", price: 139 },
+      { code: "40791", name: "LEGO® BrickHeadz The Goblet of Fire TM Figures", price: 224 },
+      { code: "40802", name: "LEGO® BrickHeadz Luna Lovegood TM And Thestral Figures", price: 109 },
+      { code: "40796", name: "LEGO® BrickHeadz Revenge Of The Sith TM Heroes And Villains", price: 224 },
+      { code: "40804", name: "LEGO® BrickHeadz Bumblebee Robot And Vehicle", price: 109 },
+      { code: "40824", name: "LEGO® Sweetheart Tweety Bird", price: 149 },
+      { code: "40814", name: "LEGO® Seasonal Baby Elephant In The Sky", price: 139 },
+      { code: "40819", name: "LEGO® Iconic Minifigure Up Scaled Racing Driver", price: 259 },
+      { code: "40884", name: "LEGO® BrickHeadz Drift And Raven Figures", price: 109 },
+      { code: "40871", name: "LEGO® Seasonal Gift Box Celebration", price: 89 },
+      { code: "40880", name: "LEGO® BrickHeadz Avengers Doomsday Heroes And Villain", price: 169 },
+      { code: "40881", name: "LEGO® BrickHeadz Supply Llama And Fishstick Figures", price: 109 },
+      { code: "40921", name: "LEGO® Iconic Up Scaled Blue Astronaut Minifigure", price: 259 },
+      { code: "40953", name: "LEGO® Creator London Bus", price: 89 },
+      { code: "40858", name: "LEGO® BrickHeadz SpongeBob SquarePants Figure", price: 59 },
+      { code: "40859", name: "LEGO® BrickHeadz Golden Age Superman TM And Batman TM Figures", price: 109 },
+      { code: "40919", name: "LEGO® BrickHeadz Gremlins Gizmo TM And Stripe Figures", price: 109 },
+      { code: "40925", name: "LEGO® BrickHeadz Alice In Wonderland", price: 169 },
+      { code: "40926", name: "LEGO® SEGA Genesis TM Console", price: 169 },
+      { code: "853234", name: "LEGO® Box Red 2x2", price: 33 },
+      { code: "850705", name: "LEGO® Iconic Salt & Pepper Set", price: 29 },
+      { code: "853571", name: "LEGO® Iconic KeyChain Hot Dog Guy", price: 29 },
+      { code: "850154", name: "LEGO® Iconic KeyChain Stud Red", price: 29 },
+      { code: "850152", name: "LEGO® Iconic KeyChain 2x4 Stud Blue", price: 29 },
+      { code: "853449", name: "LEGO® Star Wars TM Keychain Yoda", price: 29 },
+      { code: "851400", name: "LEGO® Iconic Upscaled Mug - Red", price: 49 },
+      { code: "853465", name: "LEGO® Iconic Upscaled Mug - Blue", price: 49 },
+      { code: "853946", name: "LEGO® Star Wars TM KeyChain Stormtrooper", price: 29 },
+      { code: "853921", name: "LEGO® Xtra Brick Stickers", price: 29 },
+      { code: "850807", name: "LEGO® Iconic KeyChain Minifigure Gold", price: 29 },
+      { code: "850808", name: "LEGO® Iconic KeyChain 2x4 Stud Gold", price: 29 },
+      { code: "853968", name: "LEGO® Disney Frozen 2 KeyChain Elsa", price: 29 },
+      { code: "853998", name: "LEGO® Disney KeyChain Mickey", price: 29 },
+      { code: "853999", name: "LEGO® Disney KeyChain Minnie", price: 29 },
+      { code: "854114", name: "LEGO® Harry Potter TM KeyChain Keyring", price: 29 },
+      { code: "854124", name: "LEGO® Star Wars TM KeyChain The MandalorianTM", price: 29 },
+      { code: "854082", name: "LEGO® Iconic KeyChain Lady Liberty", price: 29 },
+      { code: "854158", name: "LEGO® Iconic KeyChain French Bull Dog Guy", price: 29 },
+      { code: "854186", name: "LEGO® StarWars TM Keychain Ahsoka Tano TM", price: 29 },
+      { code: "854187", name: "LEGO® Star Wars TM KeyChain Grogu TM", price: 29 },
+      { code: "854196", name: "LEGO® Disney KeyChain Goofy", price: 29 },
+      { code: "854203", name: "LEGO® Ideas KeyChain Eyeore", price: 29 },
+      { code: "854155", name: "LEGO® Harry Potter TM KeyChain Voldemort TM", price: 29 },
+      { code: "854201", name: "LEGO® Iconic KeyChain Santa", price: 29 },
+      { code: "854245", name: "LEGO® Star Wars TM KeyChain Fennec Shand TM", price: 29 },
+      { code: "854234", name: "LEGO® Iconic KeyChain Chili Girl", price: 29 },
+      { code: "854236", name: "LEGO® Star Wars TM KeyChain Darth Vader TM", price: 29 },
+      { code: "854237", name: "LEGO® Iconic KeyChain 2x4 Earth Blue", price: 29 },
+      { code: "854286", name: "LEGO® Disney Princess KeyChain Snow White", price: 29 },
+      { code: "854291", name: "LEGO® Super Heroes KeyChain Groot", price: 29 },
+      { code: "854292", name: "LEGO® Super Heroes KeyChain Ghost Spider", price: 29 },
+      { code: "854294", name: "LEGO® Super Heroes KeyChain Loki", price: 29 },
+      { code: "854287", name: "LEGO® Disney Princess KeyChain Mirabel", price: 29 },
+      { code: "854288", name: "LEGO® Star Wars TM KeyChain Luke Skywalker TM Pilot", price: 29 },
+      { code: "854302", name: "LEGO® Sonic KeyChain Shadow The Hedgehog", price: 29 },
+      { code: "854303", name: "LEGO® Iconic KeyChain 2x4 Stud Bright Bluish Green", price: 29 },
+      { code: "854304", name: "LEGO® Iconic KeyChain 2x4 Stud Medium Lavender", price: 29 },
+      { code: "854305", name: "LEGO® Iconic KeyChain Silver Minifigure", price: 29 },
+      { code: "854316", name: "LEGO® Jurassic World KeyChain Baby Ankylosaurus", price: 29 },
+      { code: "854312", name: "LEGO® Star Wars TM KeyChain R2-D2 TM", price: 29 },
+      { code: "854313", name: "LEGO® Star Wars TM KeyChain C 3PO TM", price: 29 },
+      { code: "854317", name: "LEGO® Iconic KeyChain TRex Suit Guy", price: 29 },
+      { code: "854320", name: "LEGO® Iconic KeyChain Batgirl TM", price: 29 },
+      { code: "854321", name: "LEGO® Super Heroes Marvel KeyChain The Hulk", price: 29 },
+      { code: "854327", name: "LEGO® Disney Keychain Simba", price: 29 },
+      { code: "854328", name: "LEGO® Disney Keychain Dumbo", price: 29 },
+      { code: "854331", name: "LEGO® Keychain Dragonborn Paladin", price: 29 },
+      { code: "854329", name: "LEGO® Disney KeyChain Dug The Dog", price: 29 },
+      { code: "854330", name: "LEGO® Iconic KeyChain Sunflower Lanyard Girl", price: 29 },
+      { code: "42698", name: "LEGO® Friends Advent Calendar 2026", price: 129 },
+      { code: "60510", name: "LEGO® City Advent Calendar 2026", price: 129 },
+      { code: "75456", name: "LEGO® Star Wars TM Advent Calendar 2026", price: 169 },
+      { code: "43298", name: "LEGO® Disney Princess Advent Calendar 2026", price: 169 },
+      { code: "77057", name: "LEGO® Animal Crossing Creative Houses Seasons Of Fun", price: 439 },
+      { code: "77059", name: "LEGO® Animal Crossing Timmy And Tommys Fun Day Out", price: 259 },
+      { code: "21060", name: "LEGO® Architecture Himeji Castle", price: 729 },
+      { code: "21062", name: "LEGO® Architecture Trevi Fountain", price: 699 },
+      { code: "21064", name: "LEGO® Architecture Paris City Of Love", price: 339 },
+      { code: "21066", name: "LEGO® Architecture New York City The Big Apple", price: 599 },
+      { code: "21067", name: "LEGO® Architecture Tower Bridge", price: 1299 },
+      { code: "21065", name: "LEGO® Architecture Sagrada Família - D2C", price: 3199 },
+      { code: "31215", name: "LEGO® Art Vincent Van Gogh Sunflowers - D2C", price: 849 },
+      { code: "31218", name: "LEGO® Art Japanese Cherry Blossom Landscape", price: 509 },
+      { code: "31220", name: "LEGO® Art Claude Monet Bridge Over A Pond Of Water Lilies - D2C", price: 899 },
+      { code: "31221", name: "LEGO® Art Gustav Klimt The Kiss - D2C", price: 1299 },
+      { code: "2856753", name: "LEGO® BAM Box (Classic)", price: 49 },
+      { code: "852766", name: "LEGO® BAM Box (852766)", price: 49 },
+      { code: "11023", name: "LEGO® Classic Green Baseplate", price: 39 },
+      { code: "11026", name: "LEGO® Classic White Baseplate", price: 39 },
+      { code: "11024", name: "LEGO® Classic Gray Baseplate", price: 69 },
+      { code: "11203", name: "LEGO® Bluey Family House", price: 329 },
+      { code: "11216", name: "LEGO® Bluey Grannies With Bingo And Bluey", price: 64 },
+      { code: "11217", name: "LEGO® Bluey Brick Built Bluey Family", price: 329 },
+      { code: "11221", name: "LEGO® Bluey School With Rusty And Bluey", price: 109 },
+      { code: "10342", name: "LEGO® Botanical Pretty Pink Flower Bouquet", price: 269 },
+      { code: "10343", name: "LEGO® Botanical Mini Orchid", price: 144 },
+      { code: "10344", name: "LEGO® Botanical Lucky Bamboo", price: 144 },
+      { code: "10347", name: "LEGO® Botanical Petite Sunny Bouquet", price: 144 },
+      { code: "10348", name: "LEGO® Botanical Japanese Red Maple Bonsai Tree", price: 269 },
+      { code: "10349", name: "LEGO® Botanical Happy Plants", price: 89 },
+      { code: "10372", name: "LEGO® Botanical Hibiscus", price: 329 },
+      { code: "10373", name: "LEGO® Botanical Mini Bonsai Trees", price: 269 },
+      { code: "10345", name: "LEGO® Botanical Flower Arrangement - D2C", price: 499 },
+      { code: "10374", name: "LEGO® Botanical Bouquet Of Pink Roses", price: 269 },
+      { code: "11504", name: "LEGO® Botanical Peace Lily", price: 259 },
+      { code: "11509", name: "LEGO® Botanical Flowering Cactus", price: 139 },
+      { code: "11501", name: "LEGO® Botanical Tulip Bouquet", price: 259 },
+      { code: "11502", name: "LEGO® Botanical Sunflower Bouquet", price: 249 },
+      { code: "11505", name: "LEGO® Botanical Woodland Mushrooms", price: 349 },
+      { code: "11506", name: "LEGO® Botanical Rocking Plants", price: 89 },
+      { code: "11507", name: "LEGO® Botanical Olivia Rodrigos Flower Bouquet", price: 199 },
+      { code: "11508", name: "LEGO® Botanical Daisies", price: 64 },
+      { code: "11510", name: "LEGO® Botanical Magnolia Branches", price: 219 },
+      { code: "11511", name: "LEGO® Botanical Water Lilies", price: 169 },
+      { code: "11503", name: "LEGO® Botanical Flower Wall - D2C", price: 419 },
+      { code: "11512", name: "LEGO® Botanical Hanging Golden Pothos", price: 259 },
+      { code: "11513", name: "LEGO® Botanical Dark Flower Arrangement", price: 259 },
+      { code: "11514", name: "LEGO® Botanical Cosmos Flowers", price: 64 },
+      { code: "40524", name: "LEGO® Botanical Sunflowers", price: 69 },
+      { code: "40460", name: "LEGO® Botanical Roses", price: 69 },
+      { code: "40725", name: "LEGO® Botanical Cherry Blossoms", price: 69 },
+      { code: "10371", name: "LEGO® Botanical Cozy Plants", price: 89 },
+      { code: "60312", name: "LEGO® City Police Car", price: 39 },
+      { code: "60367", name: "LEGO® City Passenger Airplane", price: 469 },
+      { code: "60373", name: "LEGO® City Fire Rescue Boat", price: 89 },
+      { code: "60454", name: "LEGO® City Holiday Adventure Camper Van", price: 139 },
+      { code: "60456", name: "LEGO® City Police Boat Chase", price: 139 },
+      { code: "60442", name: "LEGO® City F1® Driver With McLaren Race Car", price: 64 },
+      { code: "60443", name: "LEGO® City F1® Pit Stop And Pit Crew With Ferrari Car", price: 144 },
+      { code: "60445", name: "LEGO® City F1® Truck With RB20 And AMR24 F1® Cars", price: 469 },
+      { code: "60465", name: "LEGO® City Emergency Air Ambulance Airplane", price: 229 },
+      { code: "60466", name: "LEGO® City Yellow Bulldozer", price: 279 },
+      { code: "60469", name: "LEGO® City Central Train Station", price: 439 },
+      { code: "60470", name: "LEGO® City Explorers Arctic Polar Express Train", price: 899 },
+      { code: "60479", name: "LEGO® City Police Prisoner Transport Van", price: 89 },
+      { code: "60481", name: "LEGO® City Brick Rides Police Truck", price: 44 },
+      { code: "60482", name: "LEGO® City Brick Rides Fire Truck", price: 44 },
+      { code: "60483", name: "LEGO® City Brick Rides Construction Loader", price: 44 },
+      { code: "60484", name: "LEGO® City Brick Rides Gaming Race Car", price: 44 },
+      { code: "60485", name: "LEGO® City Great Vehicles Hot Rod", price: 44 },
+      { code: "60486", name: "LEGO® City Great Vehicles EV Supercar", price: 44 },
+      { code: "60487", name: "LEGO® City Great Vehicles Yellow Taxi", price: 64 },
+      { code: "60498", name: "LEGO® City Great Vehicles Tractor", price: 89 },
+      { code: "60491", name: "LEGO® City Great Vehicles Motorcycle Transporter", price: 89 },
+      { code: "60509", name: "LEGO® City Trains Harbor Freight Train With Crane And Truck", price: 449 },
+      { code: "60478", name: "LEGO® City Great Vehicles Cement Mixer", price: 169 },
+      { code: "60480", name: "LEGO® City Great Vehicles Yellow Backhoe Loader", price: 139 },
+      { code: "60488", name: "LEGO® City Great Vehicles Fries Food Truck", price: 89 },
+      { code: "60492", name: "LEGO® City Great Vehicles Passenger Jet", price: 139 },
+      { code: "60493", name: "LEGO® City F1 Display Truck With Audi F1 Race Car", price: 199 },
+      { code: "60494", name: "LEGO® City Great Vehicles Dump Truck And Front End Loader", price: 529 },
+      { code: "60496", name: "LEGO® City Pizza Delivery Experience With Vehicles", price: 219 },
+      { code: "60497", name: "LEGO® City Drive Through Car Wash", price: 239 },
+      { code: "60499", name: "LEGO® City Fire Airport Fire Truck", price: 299 },
+      { code: "60500", name: "LEGO® City Great Vehicles The Lego Van", price: 139 },
+      { code: "60501", name: "LEGO® City Lava Land Roller Coaster Park", price: 449 },
+      { code: "60502", name: "LEGO® City Airport With Airplane", price: 449 },
+      { code: "60503", name: "LEGO® City Exploration Coast Guard Helicopter", price: 259 },
+      { code: "60504", name: "LEGO® City Exploration Coast Guard Rescue Boat And Helicopter", price: 479 },
+      { code: "60505", name: "LEGO® City Great Vehicles Airplane Service Truck And Hovercraft Remix", price: 299 },
+      { code: "60506", name: "LEGO® City Trains Classic Beach Streetcar", price: 299 },
+      { code: "60508", name: "LEGO® City Police Train Heist", price: 899 },
+      { code: "60511", name: "LEGO® City Trains Vintage Steam Train", price: 399 },
+      { code: "60512", name: "LEGO® City Great Vehicles Mountain Bike Adventure Van", price: 89 },
+      { code: "10696", name: "LEGO® Classic Medium Creative Brick Box", price: 129 },
+      { code: "10698", name: "LEGO® Classic Large Creative Brick Box", price: 229 },
+      { code: "10713", name: "LEGO® Classic Creative Suitcase", price: 89 },
+      { code: "11036", name: "LEGO® Classic Creative Vehicles", price: 249 },
+      { code: "11039", name: "LEGO® Classic Creative Food Friends", price: 44 },
+      { code: "11040", name: "LEGO® Classic Magical Transparent Box", price: 89 },
+      { code: "11041", name: "LEGO® Classic Creative Dinosaurs", price: 149 },
+      { code: "11045", name: "LEGO® Classic Creative Colorful Bricks", price: 219 },
+      { code: "10281", name: "LEGO® Creator Expert Bonsai Tree", price: 219 },
+      { code: "10295", name: "LEGO® Creator Expert Porsche 911 - D2C", price: 799 },
+      { code: "10311", name: "LEGO® Creator Expert Botanical Orchid", price: 219 },
+      { code: "31140", name: "LEGO® Creator Magical Unicorn", price: 49 },
+      { code: "31146", name: "LEGO® Creator Flatbed Truck With Helicopter", price: 89 },
+      { code: "31147", name: "LEGO® Creator Retro Camera", price: 89 },
+      { code: "31165", name: "LEGO® Creator Wild Animals Panda Family", price: 179 },
+      { code: "31168", name: "LEGO® Creator Medieval Horse Knight Castle", price: 549 },
+      { code: "31171", name: "LEGO® Creator Wild Animals Majestic Rhino With Birds", price: 269 },
+      { code: "31173", name: "LEGO® Creator Wild Animals Tropical Toucan", price: 69 },
+      { code: "31376", name: "LEGO® Creator Cute Hamster With A Flower", price: 44 },
+      { code: "31377", name: "LEGO® Creator Turtle With A Water Lily Flower", price: 44 },
+      { code: "31379", name: "LEGO® Creator Fierce Dinosaur", price: 109 },
+      { code: "31378", name: "LEGO® Creator Space Exploration Telescope", price: 149 },
+      { code: "31380", name: "LEGO® Creator Retro Gaming Console", price: 89 },
+      { code: "31381", name: "LEGO® Creator Fierce Shark With A Treasure Chest", price: 149 },
+      { code: "31382", name: "LEGO® Creator Cute Animals Playful Puppy Dog", price: 139 },
+      { code: "31383", name: "LEGO® Creator Floral Decor Perfume Bottle", price: 139 },
+      { code: "31384", name: "LEGO® Creator Wild Animals Colorful Hummingbird", price: 139 },
+      { code: "31385", name: "LEGO® Creator Sea Animals Beautiful Dolphins", price: 219 },
+      { code: "31386", name: "LEGO® Creator Wild Animals Majestic Lion", price: 299 },
+      { code: "31387", name: "LEGO® Creator Iconic Pirate Ship", price: 449 },
+      { code: "31389", name: "LEGO® Creator Iconic Ferris Wheel", price: 399 },
+      { code: "31390", name: "LEGO® Creator Floral Art Decor Painting", price: 139 },
+      { code: "31391", name: "LEGO® Creator Art Fashion Bag With Storage", price: 139 },
+      { code: "31392", name: "LEGO® Creator Music Decor Piano With Cat", price: 169 },
+      { code: "31393", name: "LEGO® Creator Forest Animals Gray Wolf", price: 219 },
+      { code: "31394", name: "LEGO® Creator Cute Animals Red Panda", price: 139 },
+      { code: "31388", name: "LEGO® Creator Wild Animals Family Of Koalas - D2C", price: 529 },
+      { code: "43249", name: "LEGO® Disney Classic Stitch", price: 299 },
+      { code: "43257", name: "LEGO® Disney Classic Angel", price: 299 },
+      { code: "43258", name: "LEGO® Disney Princess Kakamora Barge", price: 449 },
+      { code: "43262", name: "LEGO® Disney Classic Maleficents And Cruella De Vils Dresse", price: 319 },
+      { code: "43267", name: "LEGO® Disney Princess Castle And Royal Pets", price: 539 },
+      { code: "43268", name: "LEGO® Disney Classic Lilo And Stitch Beach House", price: 429 },
+      { code: "43269", name: "LEGO® Disney Classic 101 Dalmatians Puppy", price: 659 },
+      { code: "43271", name: "LEGO® Disney Classic Lucky And Penny 101 Dalmatians Puppies", price: 114 },
+      { code: "43279", name: "LEGO® Disney Pixar WALL E And EVE", price: 329 },
+      { code: "43289", name: "LEGO® Disney Princess Belle And The Beasts Enchanted Castle", price: 169 },
+      { code: "43288", name: "LEGO® Disney Classic Sallys Flowerpot", price: 219 },
+      { code: "43290", name: "LEGO® Disney Pixar Kevin And Dug", price: 259 },
+      { code: "43281", name: "LEGO® Disney Princess Elsas Ice Castle And Snow Ride Adventure", price: 219 },
+      { code: "43282", name: "LEGO® Disney Princess Village House And Boat", price: 89 },
+      { code: "43284", name: "LEGO® Disney Princess Mini Anna And Elsa", price: 44 },
+      { code: "43286", name: "LEGO® Disney Classic The Aristocats Adorable Marie", price: 169 },
+      { code: "43287", name: "LEGO® Disney Princess Olaf And Brunis Picnic Fun", price: 219 },
+      { code: "43291", name: "LEGO® Disney Princess Mini Belle And Tiana With Castle", price: 169 },
+      { code: "43292", name: "LEGO® Disney Princess Pua", price: 299 },
+      { code: "43293", name: "LEGO® Disney Princess Kakamora", price: 169 },
+      { code: "43294", name: "LEGO® Disney Princess Rapunzels Mini Tower", price: 89 },
+      { code: "43295", name: "LEGO® Disney Princess Jasmines Jewelry Box", price: 219 },
+      { code: "43296", name: "LEGO® Disney Classic Stitch And Scrump", price: 299 },
+      { code: "43297", name: "LEGO® Disney Princess Rapunzels Castle", price: 449 },
+      { code: "43299", name: "LEGO® Disney Princess Ariels Royal Wedding Boat", price: 299 },
+      { code: "43300", name: "LEGO® Disney Classic Winnie The Pooh", price: 639 },
+      { code: "43301", name: "LEGO® Disney Pixar Toy Story Slinky Dog Bookends", price: 639 },
+      { code: "43302", name: "LEGO® Disney Classic Main Street USA - D2C", price: 1499 },
+      { code: "43303", name: "LEGO® Disney Princess Mini Jasmine And Rapunzel", price: 44 },
+      { code: "43304", name: "LEGO® Disney Pixar Blazes Horse Ranch", price: 219 },
+      { code: "43280", name: "LEGO® Disney Classic Beach Fun With Lilo And Stitch", price: 89 },
+      { code: "43306", name: "LEGO® Disney Pixar Lotso", price: 169 },
+      { code: "43307", name: "LEGO® Disney Pixar Alien with Pizza Planet Rocket Ride", price: 259 },
+      { code: "43305", name: "LEGO® Disney Classic Piglets Birthday Fun", price: 169 },
+      { code: "43283", name: "LEGO® Disney Princess Cinderella Animal Friends Castle", price: 139 },
+      { code: "40657", name: "LEGO® DreamZzz Dream Village", price: 129 },
+      { code: "71486", name: "LEGO® DreamZzz Castle Nocturnia - D2C", price: 849 },
+      { code: "71500", name: "LEGO® DreamZzz Nightmare Shark Submarine", price: 669 },
+      { code: "71514", name: "LEGO® DreamZzz Dino Jet", price: 469 },
+      { code: "10913", name: "LEGO® Duplo Classic Brick Box", price: 139 },
+      { code: "10914", name: "LEGO® Duplo Classic Deluxe Brick Box", price: 249 },
+      { code: "10954", name: "LEGO® Duplo My First Number Train Learn To Count", price: 89 },
+      { code: "10421", name: "LEGO® Duplo Town Alphabet Truck", price: 179 },
+      { code: "10428", name: "LEGO® Duplo Big Interactive Community Train", price: 659 },
+      { code: "10427", name: "LEGO® Duplo Interactive Adventure Train", price: 369 },
+      { code: "10460", name: "LEGO® Duplo Green Building Plate", price: 59 },
+      { code: "10471", name: "LEGO® Duplo Town Blue Police Motorcycle", price: 44 },
+      { code: "10475", name: "LEGO® Duplo Town 3 In 1 Construction Vehicles", price: 109 },
+      { code: "10477", name: "LEGO® Duplo My First 3 In 1 Creative Cute Pets", price: 44 },
+      { code: "10462", name: "LEGO® Duplo Disney TM Frozen Creative Box With Elsa And Olaf", price: 89 },
+      { code: "10463", name: "LEGO® Duplo Disney TM Dinosaur Spidey Rex Vs Green Goblin", price: 89 },
+      { code: "10464", name: "LEGO® Duplo Disney TM Team Spidey Webquarters", price: 219 },
+      { code: "10466", name: "LEGO® Duplo Peppa Pig Train Ride With Grandpa Pig", price: 199 },
+      { code: "10467", name: "LEGO® Duplo Peppa Pig Family House", price: 329 },
+      { code: "10468", name: "LEGO® Duplo Peppa Pig Tractor And Market", price: 89 },
+      { code: "10469", name: "LEGO® Duplo Bluey Pizza Girls With Muffin And Bluey", price: 169 },
+      { code: "10473", name: "LEGO® Duplo Town Fire Truck With Hose And Firefighter", price: 139 },
+      { code: "10474", name: "LEGO® Duplo My First Creative Vehicles", price: 89 },
+      { code: "10476", name: "LEGO® Duplo Town 3 In 1 Construction Site And Vehicles", price: 399 },
+      { code: "10478", name: "LEGO® Duplo Town 3 In 1 Creative Ramps With Vehicles", price: 329 },
+      { code: "10479", name: "LEGO® Duplo Classic Colorful Creative Box", price: 89 },
+      { code: "10480", name: "LEGO® Duplo Town Discovery Forest With Wild Animals", price: 349 },
+      { code: "80118", name: "LEGO® Festivals Fortune Firecracker", price: 349 },
+      { code: "80119", name: "LEGO® Festivals Galloping Horses Canvas", price: 449 },
+      { code: "77073", name: "LEGO® Fortnite Battle Bus - D2C", price: 449 },
+      { code: "77081", name: "LEGO® Fortnite KIT", price: 449 },
+      { code: "77079", name: "LEGO® Fortnite Tomatohead", price: 64 },
+      { code: "77080", name: "LEGO® Fortnite Supply Drop", price: 169 },
+      { code: "77082", name: "LEGO® Fortnite Rave Cave", price: 899 },
+      { code: "42673", name: "LEGO® Friends Family Vacation Beach Resort", price: 629 },
+      { code: "42684", name: "LEGO® Friends Unicorn Dream Cafe", price: 169 },
+      { code: "42686", name: "LEGO® Friends Fun Indoor Playground", price: 259 },
+      { code: "42695", name: "LEGO® Friends Horse And Baby Foal Trailer", price: 139 },
+      { code: "42675", name: "LEGO® Friends Unicorn Cake Delivery Car", price: 44 },
+      { code: "42676", name: "LEGO® Friends Fun Water Park Day", price: 139 },
+      { code: "42681", name: "LEGO® Friends Axolotl Adventure Boat", price: 44 },
+      { code: "42682", name: "LEGO® Friends Nature Glamping Cabin", price: 109 },
+      { code: "42688", name: "LEGO® Friends Horse Stable And Riding Academy", price: 349 },
+      { code: "42693", name: "LEGO® Friends Creative Flower Shop", price: 139 },
+      { code: "42694", name: "LEGO® Friends Pizza Truck", price: 64 },
+      { code: "42696", name: "LEGO® Friends Animal Vet Clinic", price: 139 },
+      { code: "42700", name: "LEGO® Friends Candy And Cupcake Ferris Wheel", price: 259 },
+      { code: "42701", name: "LEGO® Friends Koala Habitat And Care Center", price: 299 },
+      { code: "42702", name: "LEGO® Friends Spinning Flower And Fairy Teacup Ride", price: 169 },
+      { code: "42703", name: "LEGO® Friends Mermaid Roller Coaster Ride", price: 449 },
+      { code: "42704", name: "LEGO® Friends Heartlake City Grand Hotel", price: 649 },
+      { code: "42705", name: "LEGO® Friends Cozy Fall Forest Cabin", price: 449 },
+      { code: "42691", name: "LEGO® Friends Garden Restaurant - D2C", price: 599 },
+      { code: "10788", name: "LEGO® Gabbys Dollhouse Gabbys Dollhouse", price: 399 },
+      { code: "11212", name: "LEGO® Gabbys Dollhouse Kitty Fairys Garden House", price: 64 },
+      { code: "11214", name: "LEGO® Gabbys Dollhouse Fairy Roller Coaster And Tea Party", price: 149 },
+      { code: "11215", name: "LEGO® Gabbys Dollhouse Brick Built Cat Friends", price: 219 },
+      { code: "633521", name: "LEGO® Gabbys Dollhouse Bucket Hat (GWP)", price: 0 },
+      { code: "113556", name: "LEGO® Botanical Vase Purple (GWP)", price: 0 },
+      { code: "116140", name: "LEGO® Reindeer Cushion (GWP)", price: 0 },
+      { code: "633653", name: "LEGO® Technic Fast And Furious Cross Body Bag (GWP)", price: 0 },
+      { code: "633652", name: "LEGO® Jurassic World Kids Backpack (GWP)", price: 0 },
+      { code: "40730", name: "LEGO® Star Wars TM Luke Skywalkers Lightsaber TM (GWP)", price: 0 },
+      { code: "30685", name: "LEGO® Star Wars TIE Interceptor TM Mini Build (GWP)", price: 0 },
+      { code: "30688", name: "LEGO® Creator Tropical Toucan (GWP)", price: 0 },
+      { code: "30708", name: "LEGO® Star Wars Millennium Falcon TM Mini Build (GWP)", price: 0 },
+      { code: "30710", name: "LEGO® Technic Skid Steer Loader (GWP)", price: 0 },
+      { code: "40768", name: "LEGO® Icons Star Trek Type 15 Shuttlepod TM (GWP)", price: 0 },
+      { code: "40773", name: "LEGO® Ideas The Goonies The Walshes Attic (GWP)", price: 0 },
+      { code: "40759", name: "LEGO® Seasonal Valentines Day Box (GWP)", price: 0 },
+      { code: "40889", name: "LEGO® Ideas Build Paint And Play (GWP)", price: 0 },
+      { code: "40897", name: "LEGO® Star Wars TM Darth Vaders Lightsaber TM (GWP)", price: 0 },
+      { code: "40898", name: "LEGO® Icons Venetian Water Taxi (GWP)", price: 0 },
+      { code: "76922", name: "LEGO® Speed Champions BMW M4 GT3 And BMW M Hybrid V8 Race Car", price: 0 },
+      { code: "95397", name: "PRIZES LEGO® Polyester Laptop Bag - Yellow (95397)", price: 0 },
+      { code: "95399", name: "PRIZES LEGO® Polyester Laptop Bag - Grey (95399)", price: 0 },
+      { code: "PRIZE-PEN", name: "PRIZES LEGO® Friends Pen Set", price: 0 },
+      { code: "106624", name: "PRIZES LEGO® Totebag (106624)", price: 0 },
+      { code: "10709", name: "PRIZES LEGO® Classic Orange Creativity Box (10709)", price: 0 },
+      { code: "40336", name: "PRIZES LEGO® Hidden Side Newbury Juice Bar (40336)", price: 0 },
+      { code: "30549", name: "PRIZES LEGO® Build Your Own Vehicles Make It Yours (30549)", price: 0 },
+      { code: "30554", name: "PRIZES LEGO® Disney Cinderella Mini Castle (30554)", price: 0 },
+      { code: "30557", name: "PRIZES LEGO® DOTS Photo Holder Cube (30557)", price: 0 },
+      { code: "30560", name: "PRIZES LEGO® DOTS Pineapple Photo Holder & Mini Board (30560)", price: 0 },
+      { code: "30636", name: "PRIZES LEGO® DreamZzz ZBlob And Bunchu Spider Escape (30636)", price: 0 },
+      { code: "30658", name: "PRIZES LEGO® Friends Mobile Music Trailer (30658)", price: 0 },
+      { code: "30659", name: "PRIZES LEGO® Friends Flower Garden (30659)", price: 0 },
+      { code: "11042", name: "PRIZES LEGO® Classic Creative Happy Box (11042)", price: 0 },
+      { code: "40756", name: "PRIZES LEGO® Festivals Lucky Knots (40756)", price: 0 },
+      { code: "622618", name: "PRIZES LEGO® Umbrella (622618)", price: 0 },
+      { code: "6317942", name: "PRIZES LEGO® Festivals Candy Box (6317942)", price: 0 },
+      { code: "6444778", name: "PRIZES LEGO® Festivals 4 In 1 Rocket (6444778)", price: 0 },
+      { code: "6486167", name: "PRIZES LEGO® Festivals 4 In 1 Opera Singer (6486167)", price: 0 },
+      { code: "76419", name: "LEGO® Harry Potter TM Hogwarts TM Castle And Grounds", price: 799 },
+      { code: "76454", name: "LEGO® Harry Potter Hogwarts TM Castle The Main Tower", price: 1149 },
+      { code: "76457", name: "LEGO® Harry Potter TM Hogsmeade TM Village Collectors Edition - D2C", price: 1699 },
+      { code: "76458", name: "LEGO® Harry Potter Thestral Family", price: 329 },
+      { code: "76475", name: "LEGO® Harry Potter TM Forbidden Forest TM Expecto Patronum", price: 139 },
+      { code: "76459", name: "LEGO® Harry Potter TM Hagrid TM And Harrys Privet Drive Escape", price: 89 },
+      { code: "76460", name: "LEGO® Harry Potter TM Hogwarts TM Castle Sorting Hat TM Ceremony", price: 64 },
+      { code: "76461", name: "LEGO® Harry Potter TM Cornish Pixie", price: 139 },
+      { code: "76462", name: "LEGO® Harry Potter TM Hogwarts TM House Crest", price: 219 },
+      { code: "76463", name: "LEGO® Harry Potter TM Hogwarts TM Castle Hospital Wing", price: 449 },
+      { code: "76464", name: "LEGO® Harry Potter TM Cauldron Secret Potions Classroom", price: 259 },
+      { code: "76466", name: "LEGO® Harry Potter TM Sorcerers Stone Collectors Edition", price: 699 },
+      { code: "76469", name: "LEGO® Harry Potter TM Dobby TM The Free Elf", price: 169 },
+      { code: "76470", name: "LEGO® Harry Potter TM Enchanted Flying Ford Anglia TM", price: 349 },
+      { code: "76471", name: "LEGO® Harry Potter TM Knockturn Alley TM Wizarding Shops", price: 449 },
+      { code: "76473", name: "LEGO® Harry Potter TM Hogwarts TM Castle East Wing", price: 1049 },
+      { code: "76474", name: "LEGO® Harry Potter TM Hogwarts TM Herbology Plants", price: 449 },
+      { code: "76476", name: "LEGO® Harry Potter TM The Ministry Of Magic TM Collectors Edition - D2C", price: 1819 },
+      { code: "76477", name: "LEGO® Harry Potter TM Norbert Hagrids Baby Dragon", price: 219 },
+      { code: "76478", name: "LEGO® Harry Potter TM Book Nook Dumbledores Office", price: 529 },
+      { code: "10307", name: "LEGO® Icons Eiffel Tower - D2C", price: 2699 },
+      { code: "10313", name: "LEGO® Icons Botanical Wildflower Bouquet", price: 269 },
+      { code: "10316", name: "LEGO® Icons The Lord Of The Rings Rivendell TM", price: 2099 },
+      { code: "10318", name: "LEGO® Icons Concorde - D2C", price: 899 },
+      { code: "10329", name: "LEGO® Icons Tiny Plants", price: 219 },
+      { code: "10335", name: "LEGO® Icons The Endurance", price: 1199 },
+      { code: "10328", name: "LEGO® Icons Bouquet Of Roses", price: 269 },
+      { code: "10330", name: "LEGO® Icons McLaren MP4/4 And Ayrton Senna", price: 379 },
+      { code: "10333", name: "LEGO® Icons The Lord Of The Rings Barad Dur TM - D2C", price: 1899 },
+      { code: "10368", name: "LEGO® Icons Chrysanthemum", price: 139 },
+      { code: "10369", name: "LEGO® Icons Plum Blossom", price: 139 },
+      { code: "10350", name: "LEGO® Icons Tudor Corner - D2C", price: 999 },
+      { code: "10367", name: "LEGO® Icons The Lord Of The Rings Balrog TM Book Nook", price: 549 },
+      { code: "41843", name: "LEGO® Icons Family Christmas Tree Decoration - D2C", price: 1349 },
+      { code: "10351", name: "LEGO® Icons Sherlock Holmes Book Nook", price: 549 },
+      { code: "10352", name: "LEGO® Icons The Simpsons TM Krusty Burger - D2C", price: 899 },
+      { code: "10354", name: "LEGO® Icons The Lord Of The Rings The Shire - D2C", price: 1199 },
+      { code: "10356", name: "LEGO® Icons Star Trek USS Enterprise NCC 1701D TM - D2C", price: 1699 },
+      { code: "10358", name: "LEGO® Icons Transformers Soundwave - D2C", price: 799 },
+      { code: "10360", name: "LEGO® Icons Shuttle Carrier Aircraft - D2C", price: 999 },
+      { code: "10361", name: "LEGO® Icons Holiday Express Train - D2C", price: 519 },
+      { code: "10365", name: "LEGO® Icons Captain Jack Sparrows Pirate Ship - D2C", price: 1499 },
+      { code: "10375", name: "LEGO® Icons How To Train Your Dragon Toothless - D2C", price: 329 },
+      { code: "11371", name: "LEGO® Icons Shopping Street - D2C", price: 1049 },
+      { code: "11372", name: "LEGO® Icons Autumn Cottage Garden", price: 479 },
+      { code: "11373", name: "LEGO® Icons The Lord Of The Rings Saurons Helmet", price: 319 },
+      { code: "11375", name: "LEGO® Icons Ferrari F2004 And Michael Schumacher", price: 399 },
+      { code: "11376", name: "LEGO® Icons Ford Model T", price: 609 },
+      { code: "11379", name: "LEGO® Icons Bookstore Book Nook", price: 599 },
+      { code: "11380", name: "LEGO® Icons Road Bike", price: 529 },
+      { code: "11381", name: "LEGO® Icons Jaguar E Type", price: 599 },
+      { code: "11382", name: "LEGO® Icons Hubble Space Telescope", price: 599 },
+      { code: "11383", name: "LEGO® Icons Mayor Manor", price: 479 },
+      { code: "11384", name: "LEGO® Icons Golden Retriever Puppy", price: 589 },
+      { code: "11389", name: "LEGO® Icons Project Hail Mary", price: 519 },
+      { code: "11370", name: "LEGO® Icons Stranger Things The Creel House - D2C", price: 1199 },
+      { code: "11374", name: "LEGO® Icons Arcade Pinball Machine - D2C", price: 899 },
+      { code: "11377", name: "LEGO® Icons The Lord Of The Rings Minas Tirith TM - D2C", price: 2899 },
+      { code: "11378", name: "LEGO® Icons Douglas TM DC3 TM PAN AM Airliner - D2C", price: 949 },
+      { code: "11385", name: "LEGO® Icons Star Trek USS Enterprise NCC 1701 TM Bridge - D2C", price: 799 },
+      { code: "11386", name: "LEGO® Icons SpongeBob SquarePants Bikini Bottom - D2C", price: 899 },
+      { code: "11387", name: "LEGO® Icons Holiday House - D2C", price: 479 },
+      { code: "11388", name: "LEGO® Icons Venetian Neighborhood - D2C", price: 2099 },
+      { code: "11390", name: "LEGO® Icons Dragon Ball Shenron And Goku - D2C", price: 599 },
+      { code: "72423", name: "LEGO® Icons Shrek Donkey And Puss In Boots", price: 529 },
+      { code: "21349", name: "LEGO® Ideas Tuxedo Cat", price: 449 },
+      { code: "21353", name: "LEGO® Ideas The Botanical Garden - D2C", price: 1499 },
+      { code: "21363", name: "LEGO® Ideas The Goonies - D2C", price: 1399 },
+      { code: "21358", name: "LEGO® Ideas Minifigure Vending Machine - D2C", price: 749 },
+      { code: "21359", name: "LEGO® Ideas The Italian Riviera - D2C", price: 1249 },
+      { code: "21362", name: "LEGO® Ideas Mineral Collection", price: 279 },
+      { code: "21360", name: "LEGO® Ideas Willy Wonka And The Chocolate Factory - D2C", price: 999 },
+      { code: "21366", name: "LEGO® Ideas Floating Sea Otters", price: 479 },
+      { code: "21367", name: "LEGO® Ideas Tintin Moon Rocket", price: 749 },
+      { code: "21369", name: "LEGO® Ideas The X Files - D2C", price: 899 },
+      { code: "21370", name: "LEGO® Ideas ET The Extra Terrestrial", price: 599 },
+      { code: "21372", name: "LEGO® Ideas La Catrina", price: 529 },
+      { code: "21373", name: "LEGO® Ideas Downton Abbey - D2C", price: 1299 },
+      { code: "21365", name: "LEGO® Ideas Love Birds", price: 219 },
+      { code: "21371", name: "LEGO® Ideas Wallace And Gromit", price: 449 },
+      { code: "21376", name: "LEGO® Ideas Orange Cat", price: 449 },
+      { code: "76968", name: "LEGO® Jurassic World Dinosaur Fossils Tyrannosaurus Rex - D2C", price: 1149 },
+      { code: "77977", name: "LEGO® Jurassic World Baby Dinosaur Pteranodon", price: 109 },
+      { code: "77978", name: "LEGO® Jurassic World Young T Rex Transport Truck", price: 139 },
+      { code: "77981", name: "LEGO® Jurassic World Velociraptor Stegosaurus And Pteranodon Rescue", price: 199 },
+      { code: "77982", name: "LEGO® Jurassic World Spinosaurus Dinosaur Escape", price: 329 },
+      { code: "77985", name: "LEGO® Jurassic World Dinosaur Fossils Triceratops", price: 449 },
+      { code: "77984", name: "LEGO® Jurassic World Jurassic Park Jeep Wrangler - D2C", price: 899 },
+      { code: "72537", name: "LEGO® Kpop Demon Hunters Derpy Tiger And Sussie Bird", price: 299 },
+      { code: "11209", name: "LEGO® Marvel Ultron Vs Iron Man", price: 89 },
+      { code: "21267", name: "LEGO® Minecraft The Illager Desert Patrol", price: 69 },
+      { code: "21268", name: "LEGO® Minecraft The Baby Pig House", price: 89 },
+      { code: "21269", name: "LEGO® Minecraft The Armadillo Mine Expedition", price: 139 },
+      { code: "21270", name: "LEGO® Minecraft The Mooshroom House", price: 229 },
+      { code: "21272", name: "LEGO® Minecraft Woodland Mansion Fighting Ring", price: 229 },
+      { code: "21273", name: "LEGO® Minecraft The Ghast Balloon Village Attack", price: 339 },
+      { code: "21274", name: "LEGO® Minecraft The Warden Encounter", price: 89 },
+      { code: "21275", name: "LEGO® Minecraft The TNT Jungle House", price: 139 },
+      { code: "21276", name: "LEGO® Minecraft The Creeper TM", price: 189 },
+      { code: "21277", name: "LEGO® Minecraft The Pickaxe Mine", price: 249 },
+      { code: "21583", name: "LEGO® Minecraft Steves Taiga Adventure", price: 44 },
+      { code: "21585", name: "LEGO® Minecraft Chicken Farm", price: 89 },
+      { code: "21586", name: "LEGO® Minecraft The Pale Garden", price: 89 },
+      { code: "21587", name: "LEGO® Minecraft Zombie Dungeon", price: 139 },
+      { code: "21584", name: "LEGO® Minecraft Nether And End Portal Journey", price: 64 },
+      { code: "21588", name: "LEGO® Minecraft The Fox", price: 199 },
+      { code: "21589", name: "LEGO® Minecraft Mini Biomes", price: 259 },
+      { code: "21590", name: "LEGO® Minecraft Wither Battle", price: 299 },
+      { code: "21591", name: "LEGO® Minecraft The Twisted Warden Battle", price: 219 },
+      { code: "21592", name: "LEGO® Minecraft Chicken Jockey Desert Attack", price: 109 },
+      { code: "21593", name: "LEGO® Minecraft First Night Adventure", price: 139 },
+      { code: "21594", name: "LEGO® Minecraft The Skeleton", price: 199 },
+      { code: "21595", name: "LEGO® Minecraft The Ender Dragon", price: 259 },
+      { code: "21596", name: "LEGO® Minecraft Evoker Village Attack", price: 399 },
+      { code: "21597", name: "LEGO® Minecraft Ghast Station", price: 449 },
+      { code: "21598", name: "LEGO® Minecraft Underwater Adventure", price: 139 },
+      { code: "21582", name: "LEGO® Minecraft Chicken Jockey", price: 139 },
+      { code: "71053", name: "LEGO® Minifigures Shrek Series", price: 15 },
+      { code: "71826", name: "LEGO® Ninjago Dragon Spinjitzu Battle Pack", price: 89 },
+      { code: "71851", name: "LEGO® Ninjago Kais Dragon Mech Battle Pack", price: 44 },
+      { code: "71854", name: "LEGO® Ninjago Coles Mission Mech And Dragon Zane", price: 139 },
+      { code: "71858", name: "LEGO® Ninjago Four Weapons Blacksmith 15th Anniversary", price: 449 },
+      { code: "71849", name: "LEGO® Ninjago Nya Vs Mutation Monster Spinner", price: 44 },
+      { code: "71850", name: "LEGO® Ninjago Lloyd Vs Earth Monster Spinner", price: 44 },
+      { code: "71853", name: "LEGO® Ninjago Jays Dragon Mech Fight", price: 89 },
+      { code: "71855", name: "LEGO® Ninjago Ninja Dragon Riyus Battle", price: 199 },
+      { code: "71859", name: "LEGO® Ninjago The Dragon Of Life", price: 449 },
+      { code: "71860", name: "LEGO® Ninjago Lloyds Titan Mech 15th Anniversary", price: 599 },
+      { code: "71862", name: "LEGO® Ninjago Lloyds Dragon Mech Battle Pack", price: 44 },
+      { code: "71863", name: "LEGO® Ninjago Zilvar And Grimtak The Dragon Beast", price: 89 },
+      { code: "71866", name: "LEGO® Ninjago Ninja Character Display 15th Anniversary", price: 169 },
+      { code: "71867", name: "LEGO® Ninjago X1 Ninja Charger 15th Anniversary", price: 349 },
+      { code: "71870", name: "LEGO® Ninjago The Twin Titan Mechs", price: 599 },
+      { code: "71871", name: "LEGO® Ninjago Battle At The Dragons Blade", price: 399 },
+      { code: "71872", name: "LEGO® Ninjago Ultra Dragon Battle", price: 899 },
+      { code: "71864", name: "LEGO® Ninjago Kai And Coles Combiner Vehicles", price: 139 },
+      { code: "71865", name: "LEGO® Ninjago Zanes Ice Dragon Battle", price: 169 },
+      { code: "71868", name: "LEGO® Ninjago Wyldfyres Transforming Dragon Mech", price: 399 },
+      { code: "71869", name: "LEGO® Ninjago Land Bounty", price: 599 },
+      { code: "71861", name: "LEGO® Ninjago The Old Town 15th Anniversary - D2C", price: 1299 },
+      { code: "75639", name: "LEGO® One Piece The Going Merry Pirate Ship", price: 629 },
+      { code: "75640", name: "LEGO® One Piece The Baratie Floating Restaurant", price: 1299 },
+      { code: "75641", name: "LEGO® One Piece Dr Hiriluks Hideout", price: 139 },
+      { code: "75642", name: "LEGO® One Piece Showdown With Captain Smoker", price: 259 },
+      { code: "75643", name: "LEGO® One Piece Tony Tony Chopper", price: 299 },
+      { code: "75644", name: "LEGO® One Piece Dorry Vs Brogy Giants Of Little Garden", price: 349 },
+      { code: "75645", name: "LEGO® One Piece Battle At Drum Castle", price: 449 },
+      { code: "75646", name: "LEGO® One Piece Garps Marine Battleship", price: 749 },
+      { code: "75647", name: "LEGO® One Piece Gum Gum Fruit", price: 299 },
+      { code: "2856755", name: "LEGO® PAB Packaging Box Standard", price: 54 },
+      { code: "2856756", name: "LEGO® PAB Packaging Box Large", price: 99 },
+      { code: "40743", name: "LEGO® Christmas Table Decoration", price: 179 },
+      { code: "40816", name: "LEGO® Seasonal Decorative Easter Egg", price: 89 },
+      { code: "40811", name: "LEGO® Seasonal Altar Of The Dead", price: 69 },
+      { code: "40822", name: "LEGO® Seasonal Jack O Lantern Pickup Truck", price: 69 },
+      { code: "40809", name: "LEGO® Seasonal Festive Gingerbread House", price: 179 },
+      { code: "40820", name: "LEGO® Seasonal Up Scaled Santa Minifigure", price: 259 },
+      { code: "40825", name: "LEGO® Seasonal Halloween Wreath", price: 179 },
+      { code: "40864", name: "LEGO® Seasonal Fortune Master", price: 139 },
+      { code: "40863", name: "LEGO® Seasonal Easter Egg Basket", price: 64 },
+      { code: "40867", name: "LEGO® Seasonal Love Letters", price: 89 },
+      { code: "40920", name: "LEGO® Seasonal Bugs Bunny", price: 169 },
+      { code: "40957", name: "LEGO® Seasonal Spring Wreath", price: 219 },
+      { code: "40862", name: "LEGO® Seasonal Holiday Ornament Selection 2", price: 59 },
+      { code: "40865", name: "LEGO® Seasonal Buddy The Elf", price: 169 },
+      { code: "40866", name: "LEGO® Seasonal Santas Holiday Sleigh Adventure", price: 139 },
+      { code: "40872", name: "LEGO® Seasonal Halloween Pumpkin Lantern", price: 139 },
+      { code: "40873", name: "LEGO® Seasonal Colorful Lantern", price: 89 },
+      { code: "40874", name: "LEGO® Seasonal Santas Holiday Countdown", price: 259 },
+      { code: "40875", name: "LEGO® Seasonal Up Scaled Mrs Claus Minifigure", price: 259 },
+      { code: "40883", name: "LEGO® Seasonal Halloween Skull Candle", price: 89 },
+      { code: "40958", name: "LEGO® Seasonal Christmas Stocking", price: 149 },
+      { code: "77119", name: "LEGO® Sonic Tails Tornado 1", price: 139 },
+      { code: "77120", name: "LEGO® Sonic Shadows Mech Vs GUN Trooper", price: 239 },
+      { code: "72306", name: "LEGO® PlayStation TM - D2C", price: 699 },
+      { code: "43008", name: "LEGO® Special Edition x Nike Dunk Set - D2C", price: 439 },
+      { code: "43033", name: "LEGO® Special Edition x 2026 US Soccer National Team Jersey", price: 109 },
+      { code: "43011", name: "LEGO® Special Edition x Lionel Messi Soccer Highlights", price: 139 },
+      { code: "43014", name: "LEGO® Special Edition x Scuderia Ferrari HP Charles Leclerc Helmet", price: 399 },
+      { code: "43015", name: "LEGO® Special Edition x Lionel Messi Soccer Legend", price: 349 },
+      { code: "43016", name: "LEGO® Special Edition x Cristiano Ronaldo Soccer Legend", price: 349 },
+      { code: "43017", name: "LEGO® Special Edition x McLaren Mastercard F1 Team Oscar Piastri Helmet", price: 399 },
+      { code: "43018", name: "LEGO® Special Edition x Lionel Messi Celebration", price: 759 },
+      { code: "43019", name: "LEGO® Special Edition Football Ball", price: 529 },
+      { code: "43020", name: "LEGO® Special Edition FIFA World Cup TM Official Trophy", price: 759 },
+      { code: "43022", name: "LEGO® Special Edition x Scuderia Ferrari HP Lewis Hamilton Helmet", price: 399 },
+      { code: "43023", name: "LEGO® Special Edition x McLaren Mastercard F1 Team Lando Norris Helmet", price: 399 },
+      { code: "43024", name: "LEGO® Special Edition x Ayrton Senna Helmet", price: 399 },
+      { code: "43025", name: "LEGO® Special Edition x Nike Air Max 95 - D2C", price: 449 },
+      { code: "43026", name: "LEGO® Special Edition x Nike Air Force 1 - D2C", price: 449 },
+      { code: "43027", name: "LEGO® Special Edition x Vini Jr Soccer Highlights", price: 139 },
+      { code: "43028", name: "LEGO® Special Edition Olivia Rodrigos Vinyl", price: 139 },
+      { code: "43029", name: "LEGO® Special Edition Olivia Rodrigos Concert Moon", price: 219 },
+      { code: "43030", name: "LEGO® Special Edition Olivia Rodrigos Secret Storage", price: 349 },
+      { code: "43031", name: "LEGO® Special Edition Olivia Rodrigos Dual Guitar", price: 529 },
+      { code: "76924", name: "LEGO® Speed Champions Mercedes AMG G 63 And SL 63", price: 229 },
+      { code: "77237", name: "LEGO® Speed Champions Dodge Challenger SRT Hellcat Sports Car", price: 129 },
+      { code: "77238", name: "LEGO® Speed Champions Lamborghini Revuelto And Huracan STO", price: 229 },
+      { code: "77239", name: "LEGO® Speed Champions Porsche 911 GT3 RS Super Car", price: 129 },
+      { code: "77240", name: "LEGO® Speed Champions Bugatti Centodieci Hyper Sports Car", price: 129 },
+      { code: "77245", name: "LEGO® Speed Champions Aston Martin Aramco F1 AMR24 Race Car", price: 129 },
+      { code: "77249", name: "LEGO® Speed Champions Williams Racing FW46 F1 Race Car", price: 129 },
+      { code: "77250", name: "LEGO® Speed Champions MoneyGram Haas F1 Team VF24 Race Car", price: 129 },
+      { code: "77251", name: "LEGO® Speed Champions McLaren F1 Team MCL38 Race Car", price: 129 },
+      { code: "77241", name: "LEGO® Speed Champions 2 Fast 2 Furious Honda S2000", price: 129 },
+      { code: "77252", name: "LEGO® Speed Champions APXGP Team Race Car From F1 The Movie", price: 119 },
+      { code: "77253", name: "LEGO® Speed Champions Bugatti Vision GT Hyper Sports Car", price: 119 },
+      { code: "77254", name: "LEGO® Speed Champions Ferrari SF90 XX Stradale Sports Car", price: 119 },
+      { code: "77255", name: "LEGO® Speed Champions Lightning McQueen", price: 119 },
+      { code: "77256", name: "LEGO® Speed Champions Time Machine From Back To The Future", price: 119 },
+      { code: "77257", name: "LEGO® Speed Champions McLaren W1", price: 119 },
+      { code: "77258", name: "LEGO® Speed Champions F1 Academy TM Race Car", price: 119 },
+      { code: "77259", name: "LEGO® Speed Champions Audi Revolut F1 Team R26 Race Car", price: 119 },
+      { code: "77260", name: "LEGO® Speed Champions The Fast And The Furious Toyota Supra MK4", price: 119 },
+      { code: "77261", name: "LEGO® Speed Champions Ferrari 499P", price: 119 },
+      { code: "77262", name: "LEGO® Speed Champions Ken Blocks 65 Ford Mustang Hoonicorn V1", price: 119 },
+      { code: "77263", name: "LEGO® Speed Champions BMW M3 E30", price: 119 },
+      { code: "77264", name: "LEGO® Speed Champions Jaguar Project 7 And Land Rover Defender", price: 239 },
+      { code: "75375", name: "LEGO® Star Wars TM Millennium Falcon TM", price: 419 },
+      { code: "75379", name: "LEGO® Star Wars TM R2 D2 TM", price: 449 },
+      { code: "75403", name: "LEGO® Star Wars Grogu TM With Hover Pram", price: 449 },
+      { code: "75407", name: "LEGO® Star Wars TM Brick Built Star Wars TM Logo", price: 339 },
+      { code: "75411", name: "LEGO® Star Wars Darth Maul TM Mech", price: 69 },
+      { code: "75417", name: "LEGO® Star Wars AT-ST TM Walker", price: 899 },
+      { code: "75409", name: "LEGO® Star Wars TM Jango Fetts Firespray Class Starship - D2C", price: 1349 },
+      { code: "75419", name: "LEGO® Star Wars Death Star TM - D2C", price: 4299 },
+      { code: "75428", name: "LEGO® Star Wars Battle Droid TM With STAP", price: 629 },
+      { code: "40806", name: "LEGO® Star Wars Gingerbread AT-AT TM Walker", price: 269 },
+      { code: "75431", name: "LEGO® Star Wars 327th Star Corps Clone Troopers TM Battle Pack", price: 179 },
+      { code: "75432", name: "LEGO® Star Wars V19 Torrent Starfighter", price: 299 },
+      { code: "75436", name: "LEGO® Star Wars TM The Mandalorian And Grogus Speeder Bike TM", price: 44 },
+      { code: "75437", name: "LEGO® Star Wars TM Cobb Vanths Speeder", price: 139 },
+      { code: "75438", name: "LEGO® Star Wars TM Yoda TM Bust", price: 169 },
+      { code: "75439", name: "LEGO® Star Wars TM Darth Vader TM Bust", price: 219 },
+      { code: "75440", name: "LEGO® Star Wars TM AT-AT TM", price: 299 },
+      { code: "75441", name: "LEGO® Star Wars TM Venator Class Attack Cruiser TM", price: 349 },
+      { code: "75443", name: "LEGO® Star Wars TM Grogus Homestead", price: 89 },
+      { code: "75444", name: "LEGO® Star Wars TM AT-RT TM Attack", price: 199 },
+      { code: "75445", name: "LEGO® Star Wars TM Anzellan Starship", price: 329 },
+      { code: "75446", name: "LEGO® Star Wars TM Grogu TM Mandalorian Apprentice", price: 599 },
+      { code: "75447", name: "LEGO® Star Wars TM The Razor Crest TM", price: 649 },
+      { code: "75448", name: "LEGO® Star Wars TM Clone Shock Trooper TM Mech", price: 64 },
+      { code: "75449", name: "LEGO® Star Wars TM Siege Of Mandalore Battle Pack", price: 89 },
+      { code: "75451", name: "LEGO® Star Wars TM Hutt Palace Sentry Droid Showdown", price: 219 },
+      { code: "75452", name: "LEGO® Star Wars TM BB8 TM Astromech Droid", price: 399 },
+      { code: "75453", name: "LEGO® Star Wars TM Offworld Sandcrawler TM And Mudhorn", price: 899 },
+      { code: "75454", name: "LEGO® Star Wars TM Imperial Remnant AT-AT TM With INT 4", price: 699 },
+      { code: "75455", name: "LEGO® Star Wars TM Boba Fett TM", price: 749 },
+      { code: "75442", name: "LEGO® Star Wars TM The Mandalorians N1 Starfighter TM - D2C", price: 1049 },
+      { code: "75457", name: "LEGO® Star Wars TM Executor Super Star Destroyer TM - D2C", price: 3199 },
+      { code: "75458", name: "LEGO® Star Wars TM Imperial Remnant AT-RT Driver TM Helmet", price: 329 },
+      { code: "75459", name: "LEGO® Star Wars TM Imperial Lambda Class Shuttle", price: 649 },
+      { code: "75461", name: "LEGO® Star Wars TM UpScaled Darth Vader TM Minifigure", price: 449 },
+      { code: "76324", name: "LEGO® Super Heroes Marvel Spider Man Vs Oscorp", price: 629 },
+      { code: "76325", name: "LEGO® Super Heroes Marvel Avengers Age Of Ultron Quinjet", price: 549 },
+      { code: "76330", name: "LEGO® Super Heroes DC Batman TM Logo", price: 349 },
+      { code: "76331", name: "LEGO® Super Heroes DC Batman V Superman TM Batmobile TM", price: 139 },
+      { code: "76332", name: "LEGO® Super Heroes DC The Batman TM Batmobile TM", price: 139 },
+      { code: "76333", name: "LEGO® Super Heroes DC Batman And Robin TM Batmobile TM", price: 139 },
+      { code: "76336", name: "LEGO® Super Heroes Marvel Spider Man Car Vs Venomized Wolverine", price: 89 },
+      { code: "76339", name: "LEGO® Super Heroes Marvel The Fantastic Four HERBIE", price: 299 },
+      { code: "76341", name: "LEGO® Super Heroes Marvel Ravager Jumpsuit Groot", price: 259 },
+      { code: "76343", name: "LEGO® Super Heroes Marvel Epic Battle Hulkbuster Vs The Hulk", price: 219 },
+      { code: "76344", name: "LEGO® Super Heroes Marvel Iron Man Mark 3 Collectors Edition", price: 599 },
+      { code: "76345", name: "LEGO® Super Heroes Marvel Doctor Doom Bust", price: 219 },
+      { code: "76346", name: "LEGO® Super Heroes Marvel Spider Man Hero Figure", price: 449 },
+      { code: "76347", name: "LEGO® Super Heroes Marvel Avengers Doomsday Quinjet", price: 259 },
+      { code: "76348", name: "LEGO® Super Heroes Marvel Epic Battle Avengers Doomsday", price: 449 },
+      { code: "76349", name: "LEGO® Super Heroes Marvel Spider Man Prison Transport Chase", price: 219 },
+      { code: "76350", name: "LEGO® Super Heroes Marvel Spider Man Vs Hulk Epic Clash", price: 399 },
+      { code: "76352", name: "LEGO® Super Heroes Marvel Avengers Doomsday New Avengers Tower", price: 479 },
+      { code: "76354", name: "LEGO® Super Heroes Marvel SHIELD Helicarrier", price: 1599 },
+      { code: "76355", name: "LEGO® Super Heroes DC Batman Returns TM Batmobile TM - D2C", price: 899 },
+      { code: "72037", name: "LEGO® Super Mario Kart TM Mario And Standard Kart - D2C", price: 749 },
+      { code: "72046", name: "LEGO® Super Mario Game Boy TM", price: 279 },
+      { code: "72051", name: "LEGO® Super Mario Donkey Kong TM Arcade", price: 749 },
+      { code: "72050", name: "LEGO® Super Mario Kart TM Luigi And Mach 8 - D2C", price: 799 },
+      { code: "42171", name: "LEGO® Technic Mercedes AMG F1 W14 E Performance", price: 999 },
+      { code: "42172", name: "LEGO® Technic McLaren P1 TM - D2C", price: 1899 },
+      { code: "42202", name: "LEGO® Technic Ducati Panigale V4 S Motorcycle", price: 849 },
+      { code: "42206", name: "LEGO® Technic Oracle Red Bull Racing RB20 F1 Car - D2C", price: 999 },
+      { code: "42207", name: "LEGO® Technic Ferrari SF24 F1 Car", price: 999 },
+      { code: "42208", name: "LEGO® Technic Aston Martin Valkyrie", price: 279 },
+      { code: "42210", name: "LEGO® Technic 2 Fast 2 Furious Nissan Skyline GTR R34 Car", price: 659 },
+      { code: "42212", name: "LEGO® Technic Ferrari FXX K", price: 279 },
+      { code: "42213", name: "LEGO® Technic Ford Bronco SUV", price: 279 },
+      { code: "42214", name: "LEGO® Technic Lamborghini Revuelto Super Sports Car", price: 829 },
+      { code: "42220", name: "LEGO® Technic Monster Jam TM Sparkle Smash TM Pull Back", price: 139 },
+      { code: "42218", name: "LEGO® Technic John Deere 1470H Wheeled Harvester", price: 44 },
+      { code: "42219", name: "LEGO® Technic Monster Jam TM Grave Digger TM Fire And Ice", price: 139 },
+      { code: "42227", name: "LEGO® Technic Jeep Wrangler Rubicon SUV", price: 299 },
+      { code: "42223", name: "LEGO® Technic 1966 Ford GT40 MKII Race Car", price: 329 },
+      { code: "42224", name: "LEGO® Technic Porsche 911 GT3 R REXY AO Racing Car", price: 599 },
+      { code: "42221", name: "LEGO® Technic NASA Artemis Space Launch System Rocket", price: 249 },
+      { code: "42222", name: "LEGO® Technic Bugatti Chiron Pur Sport Hypercar", price: 299 },
+      { code: "42234", name: "LEGO® Technic Dodge Viper GTS R Sports Car", price: 299 },
+      { code: "42236", name: "LEGO® Technic Custom Garage Ford Mustang GT Car", price: 399 },
+      { code: "42226", name: "LEGO® Technic BMW M4 GT3 EVO Race Car", price: 299 },
+      { code: "42228", name: "LEGO® Technic McLaren MCL39 F1 Car", price: 969 },
+      { code: "42229", name: "LEGO® Technic Fast And Furious Mitsubishi Eclipse Car", price: 299 },
+      { code: "42231", name: "LEGO® Technic Fast And Furious Dodge Charger RT Car", price: 649 },
+      { code: "42235", name: "LEGO® Technic Ferrari 488 Pista Car", price: 299 },
+      { code: "42238", name: "LEGO® Technic Ducati Desmo450 MX Factory Motorcycle", price: 219 },
+      { code: "42239", name: "LEGO® Technic Batmobile TM Tumbler", price: 799 },
+      { code: "42240", name: "LEGO® Technic Aston Martin Aramco AMR25 F1 Car", price: 969 },
+      { code: "42225", name: "LEGO® Technic Yellow Motorcycle", price: 44 },
+      { code: "42241", name: "LEGO® Technic Green Bugatti Chiron Pur Sport Hypercar", price: 299 },
+      { code: "42242", name: "LEGO® Technic Mercedes Benz Unimog U 5023 With Crane", price: 529 },
+      { code: "76787", name: "LEGO® Wednesday Backpack", price: 189 },
+      { code: "76788", name: "LEGO® Wednesday Nevermore Academy", price: 329 },
+      { code: "75689", name: "LEGO® Wicked Emerald City And Kiamo Ko Castle", price: 379 },
+      { code: "75690", name: "LEGO® Wicked Glinda And Elphaba Visit Munchkinland", price: 319 },
+      { code: "77093", name: "LEGO® The Legend Of Zelda Ocarina Of Time TM The Final Battle - D2C", price: 529 }
     ];
 
-    const STORAGE_KEY = "bob_my_custom_sets_v1";
+    const STORAGE_KEY = "bob_my_custom_catalog_v2";
+    const activeDiscounts = {}; // { [code]: 20 | 25 | 35 }
 
-    // Load catalog combining default sets + any locally saved custom sets
-    function loadCatalog() {
-      const map = new Map();
-      DEFAULT_SETS.forEach(item => map.set(item.code.trim(), item));
+    function loadCustomItems() {
       try {
-        const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
-        if (Array.isArray(saved)) {
-          saved.forEach(item => {
-            if (item && item.code) {
-              map.set(String(item.code).trim(), item);
-            }
-          });
-        }
-      } catch (err) {
-        console.error("Failed to parse custom sets from localStorage:", err);
+        const raw = localStorage.getItem(STORAGE_KEY);
+        return raw ? JSON.parse(raw) : [];
+      } catch {
+        return [];
       }
+    }
+
+    function saveCustomItems(items) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+    }
+
+    function getFullCatalog() {
+      const custom = loadCustomItems();
+      const map = new Map();
+      PDF_CATALOG.forEach(item => map.set(String(item.code).toUpperCase(), item));
+      custom.forEach(item => map.set(String(item.code).toUpperCase(), item));
       return Array.from(map.values());
     }
 
-    function saveCustomSet(newSet) {
-      try {
-        const existing = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
-        const filtered = Array.isArray(existing)
-          ? existing.filter(s => String(s.code).trim() !== newSet.code)
-          : [];
-        filtered.push(newSet);
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(filtered));
-      } catch (err) {
-        console.error("Failed to save custom set:", err);
+    function formatRM(amount) {
+      const num = Number(amount);
+      if (Number.isInteger(num)) {
+        return `RM ${num.toLocaleString("en-MY")}`;
       }
+      return `RM ${num.toLocaleString("en-MY", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
     }
 
-    let setCatalog = loadCatalog();
+    function updateCatalogBadge() {
+      const total = getFullCatalog().length;
+      document.getElementById("catalogCountBadge").textContent = `${total} items`;
+    }
 
-    // Formatting Helpers
-    function formatPriceRM(value) {
-      const num = Number(value);
-      if (Number.isNaN(num)) return "RM0.00";
-      return "RM" + num.toLocaleString("en-MY", {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2
+    const searchInput = document.getElementById("searchInput");
+    const clearSearchBtn = document.getElementById("clearSearchBtn");
+    const resultsContainer = document.getElementById("resultsContainer");
+    const resultsMeta = document.getElementById("resultsMeta");
+    const resultsCountText = document.getElementById("resultsCountText");
+
+    function renderResults() {
+      const query = searchInput.value.trim();
+      clearSearchBtn.classList.toggle("visible", query.length > 0);
+
+      if (!query) {
+        resultsMeta.style.display = "none";
+        resultsContainer.innerHTML = `
+          <div class="state-box">
+            <h3>Ready to look up a box!</h3>
+            <p>Start typing a set code above to see its official name, RM price, and quick 20% / 25% / 35% discounts.</p>
+          </div>
+        `;
+        return;
+      }
+
+      const qLower = query.toLowerCase();
+      const catalog = getFullCatalog();
+
+      const matches = catalog.filter(item =>
+        String(item.code).toLowerCase().includes(qLower) ||
+        item.name.toLowerCase().includes(qLower)
+      );
+
+      // Prioritize exact code match, then code prefix match
+      matches.sort((a, b) => {
+        const aCode = String(a.code).toLowerCase();
+        const bCode = String(b.code).toLowerCase();
+        if (aCode === qLower && bCode !== qLower) return -1;
+        if (bCode === qLower && aCode !== qLower) return 1;
+        if (aCode.startsWith(qLower) && !bCode.startsWith(qLower)) return -1;
+        if (bCode.startsWith(qLower) && !aCode.startsWith(qLower)) return 1;
+        return 0;
       });
+
+      resultsMeta.style.display = "flex";
+      const displaySlice = matches.slice(0, 40);
+      resultsCountText.textContent = matches.length > 40
+        ? `Showing top 40 of ${matches.length} matches`
+        : `${matches.length} ${matches.length === 1 ? "match" : "matches"} found`;
+
+      if (matches.length === 0) {
+        resultsContainer.innerHTML = `
+          <div class="state-box">
+            <h3>Set code "${escapeHtml(query)}" not found</h3>
+            <p>Check the box number or click <strong>+ Add Set Code</strong> in the top right to save it to your catalog!</p>
+          </div>
+        `;
+        return;
+      }
+
+      resultsContainer.innerHTML = displaySlice.map(item => {
+        const codeKey = String(item.code);
+        const discPct = activeDiscounts[codeKey] || 0;
+        const origPrice = Number(item.price);
+        const discountedPrice = discPct > 0 ? origPrice * (1 - discPct / 100) : origPrice;
+        const savedAmt = origPrice - discountedPrice;
+
+        const priceHtml = discPct > 0 && origPrice > 0
+          ? `
+            <div class="price-display-row">
+              <span class="field-value-price">${formatRM(discountedPrice)}</span>
+              <span class="price-original-strike">${formatRM(origPrice)}</span>
+            </div>
+            <span class="discount-saved-tag">${discPct}% OFF (Save ${formatRM(savedAmt)})</span>
+          `
+          : `
+            <div class="price-display-row">
+              <span class="field-value-price">${origPrice === 0 ? "RM 0 (GWP / Prize)" : formatRM(origPrice)}</span>
+            </div>
+          `;
+
+        return `
+          <article class="set-card" data-code="${escapeHtml(codeKey)}">
+            <div class="card-top-badge">
+              <span>BOX CODE:</span>
+              <strong>${escapeHtml(codeKey)}</strong>
+            </div>
+
+            <div class="card-fields">
+              <div class="field-sticker field-name">
+                <div class="field-label">Set Name</div>
+                <div class="field-value-name">${escapeHtml(item.name)}</div>
+              </div>
+
+              <div class="field-sticker field-price">
+                <div class="field-label">Price (MYR)</div>
+                ${priceHtml}
+              </div>
+            </div>
+
+            <div class="discount-bar">
+              <span class="discount-label">Quick Promo Calculator:</span>
+              <div class="discount-buttons">
+                <button type="button" class="btn-disc ${discPct === 20 ? "active" : ""}" data-disc="20" data-target="${escapeHtml(codeKey)}">20% OFF</button>
+                <button type="button" class="btn-disc ${discPct === 25 ? "active" : ""}" data-disc="25" data-target="${escapeHtml(codeKey)}">25% OFF</button>
+                <button type="button" class="btn-disc ${discPct === 35 ? "active" : ""}" data-disc="35" data-target="${escapeHtml(codeKey)}">35% OFF</button>
+                ${discPct > 0 ? `<button type="button" class="btn-disc-reset" data-reset="${escapeHtml(codeKey)}">Reset</button>` : ""}
+              </div>
+            </div>
+          </article>
+        `;
+      }).join("");
     }
 
-    function formatPieces(count) {
-      const num = Number(count);
-      if (Number.isNaN(num)) return "0 pieces";
-      return num.toLocaleString("en-US") + (num === 1 ? " piece" : " pieces");
-    }
-
-    function escapeHTML(str) {
+    function escapeHtml(str) {
       return String(str)
         .replace(/&/g, "&amp;")
         .replace(/</g, "&lt;")
         .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#39;");
+        .replace(/"/g, "&quot;");
     }
 
-    // DOM Elements
-    const codeInput = document.getElementById("codeInput");
-    const searchForm = document.getElementById("searchForm");
-    const clearBtn = document.getElementById("clearBtn");
-    const resultsArea = document.getElementById("resultsArea");
-    const brandResetBtn = document.getElementById("brandResetBtn");
-    const samplePills = document.querySelectorAll(".sample-pill");
+    // Event Listeners for Search & Sample Pills
+    searchInput.addEventListener("input", renderResults);
 
-    // Modal DOM Elements
-    const addModal = document.getElementById("addModal");
-    const openModalBtn = document.getElementById("openModalBtn");
-    const closeModalBtn = document.getElementById("closeModalBtn");
-    const cancelModalBtn = document.getElementById("cancelModalBtn");
-    const addSetForm = document.getElementById("addSetForm");
-    const modalFeedback = document.getElementById("modalFeedback");
-
-    /**
-     * Renders a single cute doodle result card strictly showing ONLY the 4 requested fields:
-     * 1. Name
-     * 2. Price
-     * 3. Release Month
-     * 4. Pieces Amount
-     */
-    function createStrictResultCardHTML(setItem) {
-      return `
-        <div class="relative pt-3">
-          <!-- Cute Pastel Washi Tape Sticker on Top Center -->
-          <div aria-hidden="true" class="mx-auto w-28 h-6 bg-pastelButter/90 border-2 border-pastelInk rounded-sm -rotate-2 relative z-10 -mb-3 shadow-xs"></div>
-
-          <article class="animate-pop bg-pastelSurface doodle-box shadow-doodle overflow-hidden">
-            <!-- Top Pastel Rainbow Ribbon -->
-            <div class="h-2.5 w-full bg-gradient-to-r from-pastelRose via-pastelButter via-pastelSage to-pastelSky border-b-2 border-pastelInk"></div>
-
-            <div class="p-6 sm:p-8">
-              <!-- Field 1: Name -->
-              <div class="pb-5 border-b-2 border-dashed border-pastelSand">
-                <span class="inline-flex items-center gap-1.5 font-display text-xs sm:text-sm font-semibold uppercase tracking-wider text-pastelMuted mb-1">
-                  ✦ Name
-                </span>
-                <h2 class="font-display text-2xl sm:text-3xl font-bold text-pastelInk leading-snug">
-                  ${escapeHTML(setItem.name)}
-                </h2>
-              </div>
-
-              <!-- Fields 2, 3, 4: Price, Release Month, Pieces Amount -->
-              <div class="pt-6 grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-5">
-                <!-- Field 2: Price (Cute Pastel Rose Sticker Tile) -->
-                <div class="bg-pastelRoseSoft border-2 border-pastelInk rounded-2xl p-4 shadow-doodleSm -rotate-1 hover:rotate-0 transition-transform">
-                  <span class="block font-display text-xs sm:text-sm font-semibold uppercase tracking-wide text-pastelRoseDark mb-1">
-                    Price
-                  </span>
-                  <p class="font-display text-xl sm:text-2xl font-bold text-pastelInk tracking-tight">
-                    ${formatPriceRM(setItem.price)}
-                  </p>
-                </div>
-
-                <!-- Field 3: Release Month (Cute Pastel Lavender Sticker Tile) -->
-                <div class="bg-pastelLavenderSoft border-2 border-pastelInk rounded-2xl p-4 shadow-doodleSm rotate-1 hover:rotate-0 transition-transform">
-                  <span class="block font-display text-xs sm:text-sm font-semibold uppercase tracking-wide text-[#6E6288] mb-1">
-                    Release Month
-                  </span>
-                  <p class="font-display text-xl sm:text-2xl font-bold text-pastelInk">
-                    ${escapeHTML(setItem.releaseMonth)}
-                  </p>
-                </div>
-
-                <!-- Field 4: Pieces Amount (Cute Pastel Sage Sticker Tile) -->
-                <div class="bg-pastelSageSoft border-2 border-pastelInk rounded-2xl p-4 shadow-doodleSm -rotate-1 hover:rotate-0 transition-transform">
-                  <span class="block font-display text-xs sm:text-sm font-semibold uppercase tracking-wide text-[#52735D] mb-1">
-                    Pieces Amount
-                  </span>
-                  <p class="font-display text-xl sm:text-2xl font-bold text-pastelInk">
-                    ${formatPieces(setItem.pieces)}
-                  </p>
-                </div>
-              </div>
-            </div>
-          </article>
-        </div>
-      `;
-    }
-
-    /**
-     * Handles instant lookup on input or submit
-     */
-    function handleLookup(rawQuery) {
-      const query = rawQuery.trim().replace(/^#/, "");
-
-      // Toggle clear button visibility
-      if (rawQuery.length > 0) {
-        clearBtn.classList.remove("hidden");
-      } else {
-        clearBtn.classList.add("hidden");
-      }
-
-      // Empty state: keep front page clean and uncluttered
-      if (!query) {
-        resultsArea.innerHTML = "";
-        return;
-      }
-
-      // 1. Check for exact set code match first
-      const exactMatch = setCatalog.find(
-        item => item.code.toLowerCase() === query.toLowerCase()
-      );
-
-      if (exactMatch) {
-        resultsArea.innerHTML = createStrictResultCardHTML(exactMatch);
-        return;
-      }
-
-      // 2. Check for partial set code matches (e.g., typing "763")
-      const partialMatches = setCatalog.filter(item =>
-        item.code.toLowerCase().startsWith(query.toLowerCase()) ||
-        item.code.toLowerCase().includes(query.toLowerCase())
-      );
-
-      if (partialMatches.length === 1) {
-        // Single partial match: show the clean strict result card directly
-        resultsArea.innerHTML = createStrictResultCardHTML(partialMatches[0]);
-        return;
-      }
-
-      if (partialMatches.length > 1) {
-        // Multiple partial matches: allow user to pick the exact code cleanly
-        const buttonsHTML = partialMatches
-          .map(
-            item => `
-              <button
-                type="button"
-                data-select-code="${escapeHTML(item.code)}"
-                class="partial-match-btn group flex items-center justify-between w-full text-left px-4 py-3 rounded-2xl bg-pastelBg hover:bg-pastelButterSoft border-2 border-pastelInk/80 hover:border-pastelInk shadow-doodleSm hover:-translate-y-0.5 transition-all"
-              >
-                <div class="flex items-center gap-3 min-w-0">
-                  <span class="px-3 py-0.5 doodle-pill bg-pastelRose text-white font-display font-semibold text-sm tracking-wide shrink-0">
-                    ${escapeHTML(item.code)}
-                  </span>
-                  <span class="font-display font-semibold text-base sm:text-lg text-pastelInk truncate">
-                    ${escapeHTML(item.name)}
-                  </span>
-                </div>
-                <span class="font-display text-sm font-semibold text-pastelMuted group-hover:text-pastelInk ml-3 shrink-0">
-                  Peek &rarr;
-                </span>
-              </button>
-            `
-          )
-          .join("");
-
-        resultsArea.innerHTML = `
-          <div class="animate-pop bg-pastelSurface doodle-box shadow-doodle p-5 sm:p-6">
-            <p class="font-display text-sm sm:text-base font-semibold text-pastelMuted mb-3">
-              ✦ ${partialMatches.length} matching box stickers found — tap one to open:
-            </p>
-            <div class="space-y-3">
-              ${buttonsHTML}
-            </div>
-          </div>
-        `;
-
-        // Attach click listeners to partial match selectors
-        resultsArea.querySelectorAll(".partial-match-btn").forEach(btn => {
-          btn.addEventListener("click", () => {
-            const chosenCode = btn.getAttribute("data-select-code");
-            codeInput.value = chosenCode;
-            handleLookup(chosenCode);
-          });
-        });
-        return;
-      }
-
-      // 3. Cute "Set code not found" empty state
-      resultsArea.innerHTML = `
-        <div class="animate-pop bg-pastelSurface doodle-box shadow-doodle p-8 text-center">
-          <!-- Cute Puzzled Brick Doodle SVG -->
-          <div class="w-16 h-16 rounded-2xl bg-pastelRoseSoft border-2 border-pastelInk shadow-doodleSm flex items-center justify-center mx-auto mb-3 -rotate-3">
-            <svg class="w-10 h-10" viewBox="0 0 40 40" fill="none">
-              <circle cx="14" cy="17" r="2" fill="#4B423D"/>
-              <circle cx="26" cy="17" r="2" fill="#4B423D"/>
-              <path d="M15 26C17 24 23 24 25 26" stroke="#4B423D" stroke-width="2.3" stroke-linecap="round"/>
-              <path d="M29 9C31 7 34 8 34 11C34 13 31 14 31 16" stroke="#CA7A71" stroke-width="2.2" stroke-linecap="round"/>
-              <circle cx="31" cy="19.5" r="1.2" fill="#CA7A71"/>
-            </svg>
-          </div>
-          <h3 class="font-display text-2xl font-bold text-pastelInk">Oops! Set code not found</h3>
-          <p class="text-lg text-pastelMuted mt-1">
-            We couldn't find box code <span class="font-display font-semibold text-pastelInk">"${escapeHTML(query)}"</span> in our toybox yet.
-          </p>
-          <button
-            type="button"
-            id="notFoundAddBtn"
-            class="mt-4 inline-flex items-center gap-1.5 px-5 py-2 doodle-pill bg-pastelButter hover:bg-pastelButterHover text-pastelInk font-display text-sm sm:text-base font-semibold shadow-doodleSm hover:-translate-y-0.5 active:translate-y-0 transition-all"
-          >
-            + Add "${escapeHTML(query)}" Sticker
-          </button>
-        </div>
-      `;
-
-      const notFoundAddBtn = document.getElementById("notFoundAddBtn");
-      if (notFoundAddBtn) {
-        notFoundAddBtn.addEventListener("click", () => {
-          openAddModal(query);
-        });
-      }
-    }
-
-    // Search Input & Form Listeners
-    codeInput.addEventListener("input", e => {
-      handleLookup(e.target.value);
+    clearSearchBtn.addEventListener("click", () => {
+      searchInput.value = "";
+      renderResults();
+      searchInput.focus();
     });
 
-    searchForm.addEventListener("submit", e => {
-      e.preventDefault();
-      handleLookup(codeInput.value);
-    });
-
-    clearBtn.addEventListener("click", () => {
-      codeInput.value = "";
-      handleLookup("");
-      codeInput.focus();
-    });
-
-    brandResetBtn.addEventListener("click", () => {
-      codeInput.value = "";
-      handleLookup("");
-      codeInput.focus();
-    });
-
-    // Sample Set Code Pills
-    samplePills.forEach(pill => {
-      pill.addEventListener("click", () => {
-        const code = pill.getAttribute("data-code");
-        codeInput.value = code;
-        handleLookup(code);
-        codeInput.focus();
+    document.querySelectorAll(".sample-pill").forEach(btn => {
+      btn.addEventListener("click", () => {
+        searchInput.value = btn.getAttribute("data-code");
+        renderResults();
       });
     });
 
-    // Modal Open/Close & Form Logic
-    function openAddModal(prefillCode = "") {
-      modalFeedback.classList.add("hidden");
-      addSetForm.reset();
-      if (prefillCode) {
-        document.getElementById("newCode").value = prefillCode;
-      }
-      addModal.classList.remove("hidden");
-      addModal.classList.add("flex");
-      setTimeout(() => {
-        if (prefillCode) {
-          document.getElementById("newName").focus();
+    // Event Delegation for Discount Buttons
+    resultsContainer.addEventListener("click", (e) => {
+      const discBtn = e.target.closest("[data-disc]");
+      if (discBtn) {
+        const code = discBtn.getAttribute("data-target");
+        const pct = Number(discBtn.getAttribute("data-disc"));
+        if (activeDiscounts[code] === pct) {
+          delete activeDiscounts[code];
         } else {
-          document.getElementById("newCode").focus();
+          activeDiscounts[code] = pct;
         }
-      }, 50);
-    }
-
-    function closeAddModal() {
-      addModal.classList.add("hidden");
-      addModal.classList.remove("flex");
-    }
-
-    openModalBtn.addEventListener("click", () => openAddModal(codeInput.value.trim()));
-    closeModalBtn.addEventListener("click", closeAddModal);
-    cancelModalBtn.addEventListener("click", closeAddModal);
-
-    addModal.addEventListener("click", e => {
-      if (e.target === addModal) {
-        closeAddModal();
-      }
-    });
-
-    document.addEventListener("keydown", e => {
-      if (e.key === "Escape" && !addModal.classList.contains("hidden")) {
-        closeAddModal();
-      }
-    });
-
-    addSetForm.addEventListener("submit", e => {
-      e.preventDefault();
-      const code = document.getElementById("newCode").value.trim().replace(/^#/, "");
-      const name = document.getElementById("newName").value.trim();
-      const price = parseFloat(document.getElementById("newPrice").value);
-      const releaseMonth = document.getElementById("newRelease").value.trim();
-      const pieces = parseInt(document.getElementById("newPieces").value, 10);
-
-      if (!code || !name || Number.isNaN(price) || price < 0 || !releaseMonth || Number.isNaN(pieces) || pieces < 1) {
-        modalFeedback.textContent = "Oops! Please fill in all boxes with valid details.";
-        modalFeedback.className = "mb-4 px-4 py-2 rounded-2xl text-base bg-pastelRoseSoft text-pastelRoseDark border-2 border-pastelInk";
-        modalFeedback.classList.remove("hidden");
+        renderResults();
         return;
       }
 
-      const newEntry = { code, name, price, releaseMonth, pieces };
-      saveCustomSet(newEntry);
-      setCatalog = loadCatalog();
-
-      closeAddModal();
-      codeInput.value = code;
-      handleLookup(code);
+      const resetBtn = e.target.closest("[data-reset]");
+      if (resetBtn) {
+        const code = resetBtn.getAttribute("data-reset");
+        delete activeDiscounts[code];
+        renderResults();
+      }
     });
 
-    // Focus input on initial load for immediate typing
-    window.addEventListener("DOMContentLoaded", () => {
-      codeInput.focus();
+    // Modal Logic for Adding New Set Code
+    const addModal = document.getElementById("addModal");
+    const openAddModalBtn = document.getElementById("openAddModalBtn");
+    const closeAddModalBtn = document.getElementById("closeAddModalBtn");
+    const cancelAddBtn = document.getElementById("cancelAddBtn");
+    const addSetForm = document.getElementById("addSetForm");
+
+    function openModal() {
+      addModal.classList.add("open");
+      document.getElementById("newCode").focus();
+    }
+
+    function closeModal() {
+      addModal.classList.remove("open");
+      addSetForm.reset();
+    }
+
+    openAddModalBtn.addEventListener("click", openModal);
+    closeAddModalBtn.addEventListener("click", closeModal);
+    cancelAddBtn.addEventListener("click", closeModal);
+    addModal.addEventListener("click", (e) => {
+      if (e.target === addModal) closeModal();
     });
+
+    addSetForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const code = document.getElementById("newCode").value.trim();
+      const name = document.getElementById("newName").value.trim();
+      const price = parseFloat(document.getElementById("newPrice").value);
+
+      if (!code || !name || isNaN(price)) return;
+
+      const customItems = loadCustomItems().filter(
+        item => String(item.code).toUpperCase() !== code.toUpperCase()
+      );
+      customItems.push({ code, name, price });
+      saveCustomItems(customItems);
+
+      updateCatalogBadge();
+      closeModal();
+      searchInput.value = code;
+      renderResults();
+    });
+
+    // Initialize
+    updateCatalogBadge();
   </script>
 </body>
 </html>
