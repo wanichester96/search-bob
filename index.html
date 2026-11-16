@@ -738,7 +738,7 @@
     <!-- Results Header & Container -->
     <div class="results-meta" id="resultsMeta" style="display: none;">
       <span id="resultsCountText"></span>
-      <span>Tap a discount pill to calculate promo price</span>
+      <span>Tap a discount pill to calculate promo price (rounded)</span>
     </div>
 
     <div id="resultsContainer" class="results-grid">
@@ -767,7 +767,7 @@
         </div>
         <div class="form-group">
           <label for="newPrice">Unit Price (RM) *</label>
-          <input type="number" id="newPrice" step="0.01" min="0" placeholder="e.g. 249" required />
+          <input type="number" id="newPrice" step="1" min="0" placeholder="e.g. 249" required />
         </div>
         <div class="modal-footer">
           <button type="button" class="btn-cancel" id="cancelAddBtn">Cancel</button>
@@ -1462,11 +1462,8 @@
     }
 
     function formatRM(amount) {
-      const num = Number(amount);
-      if (Number.isInteger(num)) {
-        return `RM ${num.toLocaleString("en-MY")}`;
-      }
-      return `RM ${num.toLocaleString("en-MY", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+      const rounded = Math.round(Number(amount));
+      return `RM ${rounded.toLocaleString("en-MY")}`;
     }
 
     function updateCatalogBadge() {
@@ -1533,8 +1530,8 @@
       resultsContainer.innerHTML = displaySlice.map(item => {
         const codeKey = String(item.code);
         const discPct = activeDiscounts[codeKey] || 0;
-        const origPrice = Number(item.price);
-        const discountedPrice = discPct > 0 ? origPrice * (1 - discPct / 100) : origPrice;
+        const origPrice = Math.round(Number(item.price));
+        const discountedPrice = discPct > 0 ? Math.round(origPrice * (1 - discPct / 100)) : origPrice;
         const savedAmt = origPrice - discountedPrice;
 
         const priceHtml = discPct > 0 && origPrice > 0
@@ -1659,7 +1656,7 @@
       e.preventDefault();
       const code = document.getElementById("newCode").value.trim();
       const name = document.getElementById("newName").value.trim();
-      const price = parseFloat(document.getElementById("newPrice").value);
+      const price = Math.round(parseFloat(document.getElementById("newPrice").value));
 
       if (!code || !name || isNaN(price)) return;
 
